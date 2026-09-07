@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://3ywbca24lt4s"]
+
+[ext_resource type="Texture2D" uid="uid://cysh314f57oap" path="res://Resources/peon.png" id="1_3q00k"]
+[ext_resource type="Script" uid="uid://br5dpxf08tv5u" path="res://Scenes/Objects/Piece/piece.gd" id="1_ayxdh"]
+
+[node name="Piece" type="Node2D" unique_id=1151316440]
+scale = Vector2(0.8, 0.8)
+script = ExtResource("1_ayxdh")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1812430106]
+texture = ExtResource("1_3q00k")
