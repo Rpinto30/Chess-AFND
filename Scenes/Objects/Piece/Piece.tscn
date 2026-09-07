@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://br5dpxf08tv5u" path="res://Scenes/Objects/Piece/piece.gd" id="1_ayxdh"]
 
 [node name="Piece" type="Node2D" unique_id=1151316440]
-scale = Vector2(0.8, 0.8)
+scale = Vector2(1.5, 1.5)
 script = ExtResource("1_ayxdh")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1812430106]

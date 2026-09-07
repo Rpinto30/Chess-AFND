@@ -1,3 +1,6 @@
 [gd_scene format=3 uid="uid://b71uny8tmw428"]
 
+[ext_resource type="Script" uid="uid://dmvu3uccaucah" path="res://Scenes/Objects/Player/player.gd" id="1_l6org"]
+
 [node name="Player" type="Node2D" unique_id=1144753980]
+script = ExtResource("1_l6org")

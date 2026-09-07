@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="ChessAFND"
-run/main_scene="uid://bna5si1vhmhc5"
+run/main_scene="uid://3iivcunw2cg0"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
 

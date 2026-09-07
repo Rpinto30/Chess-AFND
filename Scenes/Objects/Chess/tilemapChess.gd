@@ -1,3 +1,4 @@
+class_name Board
 extends TileMapLayer
 
 @export var points: TileMapLayer 
@@ -9,21 +10,21 @@ var matrixRef = []
 
 func _ready():
 	for i in range(SIZE.x):
+		var nref = []
+		nref.resize(SIZE.y)
+		nref.fill("")
+		matrixRef.append(nref)
 		matrixPos.append([])
-		matrixRef.append([].resize(SIZE.y))
 		for j in range(SIZE.y):
 			set_cell(Vector2i(i,j), 0, Vector2i((i+j)%2,0))
 			matrixPos[-1].append(0)
 			
-
-
 #INSTANCIA DE OBJETOS
-func instancePiece(pos: Vector2) -> void:
-	pass
-	#var instance = piece.instantiate()
-	#instance.global_position = pos
-	#get_tree().current_scene.add_child(instance)
-	
+func instancePiece(pos: Vector2i) -> Node2D:
+	var instance = piece.instantiate()
+	instance.global_position = pos
+	get_tree().current_scene.add_child(instance)
+	return instance
 
 #MANEJO DE TOQUES
 func _unhandled_input(event: InputEvent) -> void:
