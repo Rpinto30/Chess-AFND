@@ -28,6 +28,7 @@ func instancePiece(pos: Vector2i, typeColor: int, typePiece: int) -> Node2D:
 	#CONFIG
 	var sprite = utils.obtener_nodos_por_tipo(instance, Sprite2D)[0]
 	instance.global_position = pos
+	instance.scale = Vector2(1,1) * 1.53
 	instance.select_type = typePiece
 	instance.color = typeColor
 	if typeColor == 0: # White

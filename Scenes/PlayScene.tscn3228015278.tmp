@@ -8,12 +8,10 @@
 
 [node name="PlayScene" type="Node2D" unique_id=1382223566 node_paths=PackedStringArray("board_parent", "label")]
 script = ExtResource("1_535oe")
-turn = null
 board_parent = NodePath("Chess")
 label = NodePath("UI/GridLayout/Label")
 
 [node name="Complement2" type="Sprite2D" parent="." unique_id=1413793942]
-modulate = Color(0.7708395, 0.77083945, 0.77083945, 1)
 position = Vector2(162, 300)
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("2_353r0")
