@@ -1,6 +1,7 @@
 class_name ChessPlayer
 extends Node2D
 
+var ID_PLAYER: int
 @export var chessBoard: Node2D
 enum color_player {WHITE, BLACK}
 @export var type_color_player : color_player

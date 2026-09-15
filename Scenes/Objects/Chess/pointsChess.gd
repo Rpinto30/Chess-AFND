@@ -1,3 +1,4 @@
+class_name PointChess
 extends TileMapLayer
 
 func set_point(pos: Vector2, tile: Vector2i):

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://1qsp47vv2jwb"]
+
+[ext_resource type="Script" uid="uid://b1bxv3gk8xbfp" path="res://Scenes/Objects/Player/bot_afnd.gd" id="1_glja3"]
+
+[node name="Bot" type="Node2D" unique_id=1294911720]
+script = ExtResource("1_glja3")
