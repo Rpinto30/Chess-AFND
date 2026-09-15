@@ -8,7 +8,7 @@
 [node name="PlayScene" type="Node2D" unique_id=1382223566 node_paths=PackedStringArray("board_parent", "label")]
 script = ExtResource("1_535oe")
 board_parent = NodePath("Chess")
-label = NodePath("UI/Container/Label")
+label = NodePath("UI/GridLayout/Label")
 
 [node name="Chess" parent="." unique_id=820938813 instance=ExtResource("1_6x5ix")]
 position = Vector2(26, 139)
@@ -23,12 +23,14 @@ board_parent = NodePath("../Chess")
 chessBoard = NodePath("../Chess")
 
 [node name="Player2" parent="." unique_id=1144753980 node_paths=PackedStringArray("board_parent", "chessBoard") instance=ExtResource("2_1kbfr")]
-visible = false
 board_parent = NodePath("../Chess")
 chessBoard = NodePath("../Chess")
 type_color_player = 1
 
-[node name="Bot" parent="." unique_id=1294911720 instance=ExtResource("4_7vjhc")]
+[node name="Bot" parent="." unique_id=1294911720 node_paths=PackedStringArray("chessBoard") instance=ExtResource("4_7vjhc")]
+position = Vector2(0, -1)
+chessBoard = NodePath("../Chess")
+type_color_player = 1
 
 [node name="UI" type="Control" parent="." unique_id=206941260]
 layout_mode = 3
@@ -38,11 +40,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Container" type="Container" parent="UI" unique_id=1645724016]
+[node name="GridLayout" type="Container" parent="UI" unique_id=1645724016]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Label" type="Label" parent="UI/Container" unique_id=623059191]
+[node name="Panel" type="Panel" parent="UI/GridLayout" unique_id=446811196]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/GridLayout" unique_id=623059191]
 layout_mode = 2
 text = "Turno de: "

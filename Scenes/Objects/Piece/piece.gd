@@ -29,7 +29,7 @@ static func filt_pos_limits(pos: Vector2i, board: Board):
 
 static func filt_pos_own(pos: Vector2i, b:Board, player: ChessPlayer):
 	var ref = b.matrixPos[pos.y][pos.x]
-	if ref == 0 and ref != player.ID_PLAYER:
+	if ref != player.ID_PLAYER:
 		return true
 	else: return false
 

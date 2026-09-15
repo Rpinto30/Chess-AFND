@@ -9,6 +9,7 @@ var board: Board
 enum turns {P1, P2}
 @export var turn = turns.P1
 var players: Array
+var bot = null
 
 func _ready() -> void:
 	players = utils.obtener_nodos_por_tipo(self, ChessPlayer).slice(0,2)
@@ -20,7 +21,8 @@ func _ready() -> void:
 		else: 
 			set_pieces(i, 2)
 			i.ID_PLAYER = 2
-		
+	print(board.matrixPos)
+	print(board.matrixRef)
 
 func set_pieces(player: ChessPlayer, color: int):
 	var line = board.SIZE.x - 1 if color == 1 else 0 

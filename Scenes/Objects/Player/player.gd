@@ -57,6 +57,9 @@ func cap_signal(touched: bool, pos: Vector2i):
 
 #===================VERIFY VALID MOVE=======================
 func move_piece(pos: Vector2i):
+	if board.matrixRef[pos.y][pos.x] != "":
+		pass
+	
 	var piece = board.matrixRef[selected_piece.y][selected_piece.x]
 	var id_piece = board.matrixPos[selected_piece.y][selected_piece.x]
 	board.matrixRef[pos.y][pos.x] = piece
