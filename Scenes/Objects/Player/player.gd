@@ -18,8 +18,6 @@ func load_data() -> void:
 	print("todo cargado")
 	
 #===================SET ADDED POINTS=======================
-var added_points = []
-var selected_piece = Vector2i(-1,-1)
 func clear_board_points():
 	for i in range(added_points.size() - 1, -1, -1):
 		var point = added_points[i]
@@ -58,30 +56,6 @@ func cap_signal(touched: bool, pos: Vector2i):
 		board.touched.disconnect(self.cap_signal)
 
 #===================VERIFY VALID MOVE=======================
-func move_piece(pos: Vector2i):
-	if is_instance_of(board.matrixRef[pos.y][pos.x], Piece):
-		var eat_piece = board.matrixRef[pos.y][pos.x]
-		self.eat_pieces.append(eat_piece)
-		self.points += 1
-		self.get_parent().remove_child(eat_piece)
-		
-		print("Piezas comidas por: ", self.name)
-		for i in self.eat_pieces:
-			print(i.select_type)
-			
-	
-	var piece = board.matrixRef[selected_piece.y][selected_piece.x]
-	var id_piece = board.matrixPos[selected_piece.y][selected_piece.x]
-	board.matrixRef[pos.y][pos.x] = piece
-	board.matrixRef[selected_piece.y][selected_piece.x] = ""
-	
-	board.matrixPos[pos.y][pos.x] = id_piece
-	board.matrixPos[selected_piece.y][selected_piece.x] = 0
-	var pos_local = board.map_to_local(pos)
-	var pos_global = board.to_global(pos_local)
-	
-	piece.global_position = pos_global
-	actual_state = states.END
 
 func cap_select(touched: bool, pos: Vector2i):
 	if touched:
@@ -89,7 +63,8 @@ func cap_select(touched: bool, pos: Vector2i):
 		if added_points.has(pos):
 			print(pos, ": Puede moverse")
 			actual_state = states.VALIDMOVE
-			move_piece(pos)
+			move_piece(board, pos)
+			actual_state = states.END
 		else:
 			print("MOVIMIENTO NO VALIDO ----------")
 			actual_state = states.INVALIDMOVE

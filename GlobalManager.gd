@@ -8,7 +8,7 @@ var bot_difficulty: int
 # "bot" | "1vs1"
 var mode: String
 
-# 0 negras/colonizador | 1 blancas/Tropa
+# 1 negras/colonizador | 0 blancas/Tropa
 var side: int
 # 1 = piezas Maya | 0 = piezas clásicas
 var style: int

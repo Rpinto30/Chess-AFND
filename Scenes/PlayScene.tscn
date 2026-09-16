@@ -14,14 +14,15 @@ player_ref = ExtResource("2_1kbfr")
 bot_ref = ExtResource("4_7vjhc")
 
 [node name="Complement2" type="Sprite2D" parent="." unique_id=1413793942]
+visible = false
 modulate = Color(0.7708395, 0.77083945, 0.77083945, 1)
 position = Vector2(162, 300)
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("2_353r0")
 
 [node name="Chess" parent="." unique_id=820938813 instance=ExtResource("1_6x5ix")]
-position = Vector2(59, 201)
-scale = Vector2(1.65, 1.65)
+position = Vector2(37, 191)
+scale = Vector2(2, 2)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=790168747]
 position = Vector2(166, 294)

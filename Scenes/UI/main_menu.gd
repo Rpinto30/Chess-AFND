@@ -447,13 +447,13 @@ func _crear_paso2_jugar() -> VBoxContainer:
 	pills_bando.clear()
 	var btn_maya := _boton_pill("● Mayas", COLOR_MAYA, COLOR_MAYA, 13)
 	btn_maya.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	btn_maya.pressed.connect(func(): bando_maya = true; _actualizar_seleccion(pills_bando, 0, COLOR_MAYA))
+	btn_maya.pressed.connect(func(): bando_maya = false; _actualizar_seleccion(pills_bando, 0, COLOR_MAYA))
 	hbox_bando.add_child(btn_maya)
 	pills_bando.append(btn_maya)
 
 	var btn_spain := _boton_pill("● Reino de España", COLOR_SPAIN, COLOR_SPAIN, 13)
 	btn_spain.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	btn_spain.pressed.connect(func(): bando_maya = false; _actualizar_seleccion(pills_bando, 1, COLOR_SPAIN))
+	btn_spain.pressed.connect(func(): bando_maya = true; _actualizar_seleccion(pills_bando, 1, COLOR_SPAIN))
 	hbox_bando.add_child(btn_spain)
 	pills_bando.append(btn_spain)
 
@@ -525,7 +525,7 @@ func save_info() -> void:
 		
 	GlobalManager.time = tiempo_segundos
 	GlobalManager.style = int(piezas_estilo_maya) # 1 = piezas Maya | 0 = piezas clásicas
-	GlobalManager.side = int(bando_maya) # 0 negras/colonizador | 1 blancas/Tropa
+	GlobalManager.side = int(bando_maya) # 1 negras/colonizador | 0 blancas/Tropa
 	
 	print(GlobalManager.player1_name)
 

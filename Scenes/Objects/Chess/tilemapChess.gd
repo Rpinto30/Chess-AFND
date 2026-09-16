@@ -2,8 +2,12 @@ class_name Board
 extends TileMapLayer
 
 @export var points: TileMapLayer 
+@export_category("NORMAL STYLE")
 @export var blackPieces: Array[Texture2D]
 @export var whitePieces: Array[Texture2D]
+@export_category("AMBIENT STYLE")
+@export var blackPieces_AMBIENT: Array[Texture2D]
+@export var whitePieces_AMBIENT: Array[Texture2D]
 @export var piece: PackedScene
 signal touched(t: bool, pos: Vector2i)
 
@@ -23,40 +27,27 @@ func _ready():
 			matrixPos[-1].append(0)
 			
 #INSTANCIA DE OBJETOS
-func instancePiece(pos: Vector2i, typeColor: int, typePiece: int) -> Node2D:
+#typeColor: 0:white| 1:black
+#typePiece: 0:Pawn| 1:knight| 2:bishop| 3:rook| 4:queen| 5:king
+#style: 0:classic| 1: ambient
+func instancePiece(pos: Vector2i, typeColor: int, typePiece: int, style: int = 0) -> Node2D:
 	var instance = piece.instantiate()
 	#CONFIG
 	var sprite = utils.obtener_nodos_por_tipo(instance, Sprite2D)[0]
 	instance.global_position = pos
-	instance.scale = Vector2(1,1) * 1.53
+	instance.scale = Vector2(1,1) * 1.7
 	instance.select_type = typePiece
 	instance.color = typeColor
 	if typeColor == 0: # White
-		"""
-		ssegun la señal:
-			detectar si es una pieza de mi jugador
-			en piece, segun el tipo que sea marcar jugadas validas
-			retornar las jugadas
-			marcar en el board con lo puntos las jugadas
-			cambiar state a moviendo
-			
-			EN MOVIENDO
-			si el movimiento es valido (selecciona una casilla valida)
-				cambia de estado a movimineto valido
-			sino: regresa a waiting
-			
-			mueve la pieza, acutalizando su posición en el scene
-			como en matrixRef y matrixPos
-			cambia de estado a END
-			
-			si estado es END:
-				resetea todas las signals,
-				FRENAR ACCIONES DEL JUGADOR 
-				cambia el jugador de P1 a P2
-		"""
-		sprite.texture = whitePieces[typePiece]
+		if style == 0: #classic
+			sprite.texture = whitePieces[typePiece]
+		else:	
+			sprite.texture = whitePieces_AMBIENT[typePiece]
 	else: # Black
-		sprite.texture = blackPieces[typePiece]
+		if style == 0: #classic
+			sprite.texture = blackPieces[typePiece]
+		else:	
+			sprite.texture = blackPieces_AMBIENT[typePiece]
 	
 	get_tree().current_scene.add_child(instance)
 	return instance
