@@ -11,9 +11,14 @@ config_version=5
 [application]
 
 config/name="ChessAFND"
-run/main_scene="uid://3iivcunw2cg0"
+run/main_scene="uid://bwbx4s3l6u4fc"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GlobalManager="*uid://dlb2sjc8ikelv"
+SceneTransition="*uid://f8f756f6ele5"
 
 [display]
 

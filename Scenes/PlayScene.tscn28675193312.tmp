@@ -10,8 +10,6 @@
 script = ExtResource("1_535oe")
 board_parent = NodePath("Chess")
 label = NodePath("UI/GridLayout/Label")
-player_ref = ExtResource("2_1kbfr")
-bot_ref = ExtResource("4_7vjhc")
 
 [node name="Complement2" type="Sprite2D" parent="." unique_id=1413793942]
 modulate = Color(0.7708395, 0.77083945, 0.77083945, 1)
@@ -26,6 +24,15 @@ scale = Vector2(1.65, 1.65)
 [node name="Camera2D" type="Camera2D" parent="." unique_id=790168747]
 position = Vector2(166, 294)
 zoom = Vector2(2.17, 2.17)
+
+[node name="Player1" parent="." unique_id=350955538 node_paths=PackedStringArray("board_parent", "chessBoard") instance=ExtResource("2_1kbfr")]
+board_parent = NodePath("../Chess")
+chessBoard = NodePath("../Chess")
+
+[node name="Player2" parent="." unique_id=1144753980 node_paths=PackedStringArray("board_parent", "chessBoard") instance=ExtResource("2_1kbfr")]
+board_parent = NodePath("../Chess")
+chessBoard = NodePath("../Chess")
+type_color_player = 1
 
 [node name="Bot" parent="." unique_id=1294911720 node_paths=PackedStringArray("chessBoard") instance=ExtResource("4_7vjhc")]
 position = Vector2(0, -1)

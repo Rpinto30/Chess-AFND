@@ -8,13 +8,15 @@ var board_points: PointChess
 enum states { WAITING, SELECT, VALIDMOVE, INVALIDMOVE, END}
 var actual_state = states.WAITING
 
-func _ready() -> void:
-	board = utils.obtener_nodos_por_tipo(board_parent, Board)[0]
-	board_points = utils.obtener_nodos_por_tipo(board_parent, PointChess)[0]
+func load_data() -> void:
+	print(self.chessBoard.name)
+	board = utils.obtener_nodos_por_tipo(self.chessBoard, Board)[0]
+	board_points = utils.obtener_nodos_por_tipo(self.chessBoard, PointChess)[0]
+
 	if not board.touched.is_connected(self.cap_signal):
 		board.touched.connect(self.cap_signal)
-
-
+	print("todo cargado")
+	
 #===================SET ADDED POINTS=======================
 var added_points = []
 var selected_piece = Vector2i(-1,-1)
@@ -101,6 +103,9 @@ func restore():
 	selected_piece = Vector2i(-1,-1)
 
 func main():
+	if board == null:
+		print("Esperando a que el tablero esté listo...")
+		return 
 	match actual_state:
 		states.WAITING:
 			if not board.touched.is_connected(self.cap_signal):

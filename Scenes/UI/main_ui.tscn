@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://dw64xoo1r4abh"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_prm5q"]
+font_size = 30
+
+[sub_resource type="LabelSettings" id="LabelSettings_topv4"]
+font_size = 50
+
+[node name="Control" type="Control" unique_id=793801891]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="." unique_id=981682522]
+layout_mode = 0
+offset_right = 722.0
+offset_bottom = 111.0
+
+[node name="ColorRect3" type="ColorRect" parent="." unique_id=1031898326]
+layout_mode = 0
+offset_right = 719.0
+offset_bottom = 109.0
+color = Color(0.043077774, 0.30969238, 0, 1)
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2141507118]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 115.0
+offset_right = 359.0
+offset_bottom = 300.0
+color = Color(0.043077774, 0.30969238, 0, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="." unique_id=1537161692]
+layout_mode = 0
+offset_left = 373.0
+offset_top = 117.0
+offset_right = 716.0
+offset_bottom = 302.0
+color = Color(0.34319276, 0.22114685, 0.11586996, 1)
+
+[node name="Timer" type="Timer" parent="." unique_id=1456528816]
+
+[node name="LabelMayas" type="Label" parent="." unique_id=1567105487]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 135.0
+offset_right = 199.0
+offset_bottom = 204.0
+text = "Mayas:"
+label_settings = SubResource("LabelSettings_prm5q")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="LabelEspanol" type="Label" parent="." unique_id=1330498010]
+layout_mode = 0
+offset_left = 381.0
+offset_top = 136.0
+offset_right = 562.0
+offset_bottom = 205.0
+text = "Españoles:"
+label_settings = SubResource("LabelSettings_prm5q")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="LabelTimer" type="Label" parent="." unique_id=966724415]
+layout_mode = 0
+offset_left = 219.0
+offset_top = 16.0
+offset_right = 490.0
+offset_bottom = 99.0
+text = "Timer()"
+label_settings = SubResource("LabelSettings_topv4")
+horizontal_alignment = 1
+uppercase = true

@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://f8f756f6ele5"]
+
+[ext_resource type="Script" uid="uid://cfsgw8kodg3cw" path="res://SceneTransition.gd" id="1_1id5y"]
+
+[sub_resource type="Animation" id="Animation_1id5y"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(40, 40)]
+}
+
+[sub_resource type="Animation" id="Animation_fmi6r"]
+resource_name = "wip_out"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:size")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(40, 5500), Vector2(40, 40)]
+}
+
+[sub_resource type="Animation" id="Animation_yny7i"]
+resource_name = "wipe_in"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:size")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(40, 40), Vector2(40, 5500)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_at8fj"]
+_data = {
+&"RESET": SubResource("Animation_1id5y"),
+&"wip_out": SubResource("Animation_fmi6r"),
+&"wipe_in": SubResource("Animation_yny7i")
+}
+
+[node name="SceneTransition" type="CanvasLayer" unique_id=250614781]
+script = ExtResource("1_1id5y")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=152989278]
+offset_left = -238.0
+offset_top = -10.999998
+offset_right = -198.0
+offset_bottom = 29.000002
+rotation = -0.10747512
+scale = Vector2(27.096813, 0.27006912)
+color = Color(0, 0, 0, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=780240834]
+libraries/ = SubResource("AnimationLibrary_at8fj")

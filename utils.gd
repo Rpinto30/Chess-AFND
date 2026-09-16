@@ -8,3 +8,10 @@ static func obtener_nodos_por_tipo(nodo_raiz: Node, tipo_clase) -> Array:
 			resultado.append(hijo)
 		resultado.append_array(obtener_nodos_por_tipo(hijo, tipo_clase))
 	return resultado
+
+
+static func transition_scene(path: String) -> void:
+	SceneTransition.transition_to_scene(path)
+
+static func reveal_scene() -> void:
+	SceneTransition.play_wipe_out()
