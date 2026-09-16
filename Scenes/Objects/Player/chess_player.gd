@@ -12,4 +12,6 @@ const init_pos_pieces = [
 ]
 
 var pieces = []
-var points: int
+var points: int = 0
+
+var eat_pieces = []
