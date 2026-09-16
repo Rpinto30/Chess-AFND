@@ -19,7 +19,7 @@ var stylePieces: int = 0
 
 #=======================LOAD =============================
 
-func default_data(mode: String, color: int): # 1v1 | bot; 0: white | 1: black
+func default_data(mode: String, color: int, style:int): # 1v1 | bot; 0: white | 1: black
 	var player1: ChessPlayer = player_ref.instantiate()
 	player1.player_name = "PLAYER 1"
 	player1.chessBoard = board_parent
@@ -46,11 +46,12 @@ func default_data(mode: String, color: int): # 1v1 | bot; 0: white | 1: black
 	
 	player1.load_data()
 	player2.load_data()
+	stylePieces = style
+	
 func load_global_data():
 	var player1: ChessPlayer = player_ref.instantiate()
 	player1.player_name = GlobalManager.player1_name
 	player1.chessBoard = board_parent
-	print(GlobalManager.side)
 	player1.type_color_player = player1.color_player.BLACK if GlobalManager.side == 1 else player1.color_player.WHITE
 	player1.ID_PLAYER = 1
 	player1.time = GlobalManager.time
@@ -78,7 +79,7 @@ func load_global_data():
 func _ready() -> void:
 	#players = utils.obtener_nodos_por_tipo(self, ChessPlayer).slice(0,2)
 	board = utils.obtener_nodos_por_tipo(board_parent, Board)[0]
-	default_data('1vs1', 0)
+	default_data('1vs1', 1, 1)
 	#load_global_data()
 	for i in players:
 		set_pieces(i, i.ID_PLAYER)
@@ -136,8 +137,15 @@ func manager_turns():
 	if player.actual_state == player.states.END:
 		if turn == turns.P1:  turn = turns.P2
 		else: turn = turns.P1
+		
+		#aca cambia de turno, por eso uso otra vez select_player_by_turn()
+		var other = select_player_by_turn()
+		
+		player.set_danger_points(other, board)
+		other.check_jaque()
 		player.restore()
-
+		
+		
 
 """
 estados especiales:
@@ -146,21 +154,6 @@ estados especiales:
 
 - tablas (rey/rey - movimientos repetidos)
 """
-func process_jaque() -> bool:
-	#var player = select_player_by_turn()
-	var other = select_other_by_turn()
-	var in_jaque = true
-	for piece in other.my_pieces:
-		#player:ChessPlayer,pos: Vector2i, board:Board, movements: Array[Vector2i]
-		print("==================PLAYER: ", other.ID_PLAYER, " VEFIRICA JAQUE======")
-		print(piece.get_possible_moves(
-			other,
-			piece.actual_pos,
-			board,
-			piece.Pawn_valid_move()
-		))
-	return in_jaque
-
 func process_jaquemate() -> bool:
 	return true
 

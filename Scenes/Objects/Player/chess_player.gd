@@ -8,7 +8,7 @@ enum color_player {WHITE, BLACK}
 @export var type_color_player : color_player
 
 const init_pos_pieces = [
-	[3,2,1,5,4,1,2,3],
+	[3,2,1,4,5,1,2,3],
 	[0,0,0,0,0,0,0,0]
 ]
 
@@ -19,6 +19,13 @@ var time: float
 var my_king: Piece
 var eat_pieces = []
 var my_pieces = []
+
+#============toma de desiciones=====
+var danger_points = []
+enum states_game  {NORMAL,JAQUE, JAQUEMATE}
+var in_jaque: states_game
+var in_jaquemate: bool
+#tablas nio xd
 
 #=========================MOVE PIECES================================
 var added_points = []
@@ -41,12 +48,49 @@ func move_piece(board: Board, pos: Vector2i):
 	piece.global_position = pos_global
 	piece.actual_pos = pos
 
+func set_danger_points(other: ChessPlayer, board: Board):
+	other.danger_points.clear()
+	for piece in self.my_pieces:
+		var r = piece.get_possible_moves(
+			self,
+			piece.actual_pos,
+			board,
+			piece.Pawn_valid_move()
+		)
+		var new_ = r.filter(func(x): return not other.danger_points.has(x))
+		other.danger_points.append_array(new_)
 
-func load_data():
-	pass
 
-func restore():
-	pass
+func check_jaque():
+	if my_king.actual_pos in self.danger_points:
+		in_jaque = states_game.JAQUE
+	else: in_jaque = states_game.NORMAL
 
-func main():
-	pass
+
+#TODO MEJORAR ALGORITMO DE MOVER PIEZAS CON JAQUE Y DETECTAR JAQUEMATE
+func valid_moves_jaque(piece: Piece):
+	var p = piece.Pawn_valid_move()
+	var result = []
+	
+	if piece.select_type == 5: #king:
+		for mov in p:
+			var r = utils.check_operation_vec_player(ID_PLAYER, piece.actual_pos, mov)
+			if not r in self.danger_points:
+				result.append(mov)
+				print(r)
+				print(self.danger_points)
+		return result
+	else:
+		for mov in p:
+			var r = utils.check_operation_vec_player(ID_PLAYER, piece.actual_pos, mov)
+			if r in self.danger_points:
+				#Agregar un mejor manejo de jaques
+				result.append(mov)
+		return result
+
+
+
+#==================================POLIMORFIZMO ZONE===========================
+func load_data(): pass
+func restore(): pass
+func main(): pass

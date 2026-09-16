@@ -24,27 +24,39 @@ func clear_board_points():
 		board_points.remove_point(point)
 		added_points.remove_at(i)
 
-func set_board_points(piece_pos: Vector2i, possible_pos):
+
+func debug_set_points_danger():
+	for i in danger_points:
+		board_points.set_point(i, Vector2i(2,0))
+
+func set_board_points(piece_pos: Vector2i, possible_pos, type_point: Vector2i = Vector2i(2,0)):
 	for comb in possible_pos:
-		var r = piece_pos-comb if ID_PLAYER == 1 else piece_pos+comb
+		var r = utils.check_operation_vec_player(ID_PLAYER, piece_pos, comb)
+		#var r = piece_pos-comb if ID_PLAYER == 1 else piece_pos+comb
+		
+		#FILTROS DE MOVIMIENTO
 		var condition = (Piece.filt_pos_limits(r, board) and 
 		Piece.filt_pos_own(r, board, self))
+	
 		if condition:
-			board_points.set_point(r, Vector2i(2,0))
+			board_points.set_point(r, type_point)
 			added_points.append(r)
 
 func cap_signal(touched: bool, pos: Vector2i):
 	if touched:
 		selected_piece = Vector2i(-1,-1)
 		clear_board_points()
-		print(self.name, " toco: ", pos)
 		if pos.x != -1 and pos.y != -1:
 			var piece = board.matrixRef[pos.y][pos.x]
 			selected_piece = pos
 			if is_instance_of(piece, Piece):
 				if piece.color == type_color_player:
-					var p = piece.Pawn_valid_move()
-					set_board_points(pos, p)
+					if not  self.in_jaque:
+						var p = piece.Pawn_valid_move()
+						set_board_points(pos, p)
+					else:
+						var p = self.valid_moves_jaque(piece)
+						set_board_points(pos, p, Vector2i(2,2))
 				#endOwnPiece
 			#endIsInstance
 		#endValidPos
@@ -61,7 +73,7 @@ func cap_select(touched: bool, pos: Vector2i):
 	if touched:
 		#clear_board_points()
 		if added_points.has(pos):
-			print(pos, ": Puede moverse")
+			#print(pos, ": Puede moverse")
 			actual_state = states.VALIDMOVE
 			move_piece(board, pos)
 			actual_state = states.END

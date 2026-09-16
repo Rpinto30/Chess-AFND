@@ -23,6 +23,17 @@ var select_type: Type
 var player_owner: ChessPlayer
 var actual_pos: Vector2i
 
+static func filt_jaque_pos(player: ChessPlayer, pos: Vector2i, piece):
+	print("EN JAQUE===========================")
+	if piece.select_type == 5: #king
+		print("REY")
+		if pos in player.danger_points: return false
+		else: return true
+	else:
+		if pos in player.danger_points: return true
+		else: return false
+	
+
 static func filt_pos_limits(pos: Vector2i, board: Board):
 	if ((0 <= pos.x and pos.x < board.SIZE.x) and 
 		(0 <= pos.y and pos.y < board.SIZE.y)):
@@ -40,12 +51,12 @@ func eat_piece(player: ChessPlayer):
 	player.points += 1
 	player.get_parent().remove_child(self)
 	
-	print("Piezas comidas por: ", self.name)
+	#print("Piezas comidas por: ", self.name)
 	if self.player_owner.my_pieces.has(self):
 		self.player_owner.my_pieces.erase(self)
-	print(self.player_owner.my_pieces)
+	#print(self.player_owner.my_pieces)
 
-func get_possible_moves(player:ChessPlayer,pos: Vector2i, board:Board, movements: Array):
+func get_possible_moves(player:ChessPlayer, pos: Vector2i, board:Board, movements: Array):
 	var valids = []
 	for comb in movements:
 		var r = pos-comb if player.ID_PLAYER == 1 else pos+comb
@@ -53,8 +64,6 @@ func get_possible_moves(player:ChessPlayer,pos: Vector2i, board:Board, movements
 		Piece.filt_pos_own(r, board, player))
 		if condition:
 			valids.append(r)
-			#board_points.set_point(r, Vector2i(2,0))
-			#added_points.append(r)
 	return valids
 	
 func Pawn_valid_move():
