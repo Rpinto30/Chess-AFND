@@ -1,19 +1,4 @@
 extends Control
-"""
-Claude me avisó de cómo conectar scenes entre ellas, pero hay una cosa que te dejo aquí y es 
-que hay que agregar un par de variables globales para que el timer que escojás aquí se mestre en la UI
-y básicamente dice así:
-	'Ve a Project > Project Settings > Autoload y agrega un script nuevo (ej. Global.gd) con variables: 
-	nombre_usuario, dificultad_bot, modo, bando_maya, tiempo_segundos. Sirve para pasar datos entre escenas, 
-	ya que al cambiar de escena se pierden las referencias directas.
-	ss
-	En main_menu.gd, conecta tus propias señales a funciones que escriban en Global y cambien de escena: 
-	configuracion_actualizada.connect(func(n, d): Global.nombre_usuario = n; 
-	Global.dificultad_bot = d) partida_iniciada.connect(func(modo, bando, seg): 
-	Global.modo = modo Global.bando_maya = bando Global.tiempo_segundos = seg get_tree().change_scene_to_file("res://Game.tscn") )' - Claude
-
-"""
-
 
 # ─────────────────────────────────────────────
 #  SEÑALES (conectar desde la escena que instancie este menú)
@@ -47,6 +32,7 @@ var tiempo_segundos   := 600
 
 # refs
 var fondo: TextureRect
+var logo: TextureRect
 var input_nombre: LineEdit
 var switch_piezas: Button
 var pills_dificultad: Array[Button] = []
@@ -173,9 +159,9 @@ func _actualizar_seleccion(botones: Array[Button], idx_activo: int,
 		b.add_theme_color_override("font_color", color_activo if activo else COLOR_TEXTO_MUTED)
 
 # ─────────────────────────────────────────────
-#  CONTENIDO PRINCIPAL (título + botones Jugar / Opciones)
+#  CONTENIDO PRINCIPAL (logo + botones Jugar / Opciones)
 # ─────────────────────────────────────────────
-const DESPLAZAMIENTO_VERTICAL_MENU := -100  # negativo = sube el bloque · positivo = lo baja
+const DESPLAZAMIENTO_VERTICAL_MENU := -80  # negativo = sube el bloque · positivo = lo baja
 
 func _crear_contenido_principal() -> void:
 	var centro := CenterContainer.new()
@@ -186,32 +172,62 @@ func _crear_contenido_principal() -> void:
 	add_child(centro)
 
 	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 28)
+	vbox.add_theme_constant_override("separation", 12)
 	centro.add_child(vbox)
 
-	# Bloque de título tipo "estela"
-	var panel_titulo := PanelContainer.new()
-	panel_titulo.add_theme_stylebox_override("panel", _estilo_panel(20, COLOR_FONDO_PANEL, COLOR_DORADO, 2))
-	var margin_t := MarginContainer.new()
-	margin_t.add_theme_constant_override("margin_left",   32)
-	margin_t.add_theme_constant_override("margin_right",  32)
-	margin_t.add_theme_constant_override("margin_top",    20)
-	margin_t.add_theme_constant_override("margin_bottom", 20)
-	panel_titulo.add_child(margin_t)
+	# El SVG del logo trae <text> integrado ("KAB'AWIL" y "LA INVASIÓN"),
+	# pero el importador de SVG de Godot no dibuja texto, solo vectores.
+	# Por eso el ícono se muestra pero el texto queda en blanco.
+	# Solución: superponer Labels de Godot en el hueco que el propio SVG
+	# dejó reservado para ese texto (viewBox 600x720 → título arriba ~6.7%,
+	# subtítulo abajo ~93.6%). Ajusta esos porcentajes si no calzan bien.
+	var logo_wrap := Control.new()
+	logo_wrap.custom_minimum_size = Vector2(260, 312)  # mantiene proporción 600:720 del SVG
 
-	var vbox_t := VBoxContainer.new()
-	vbox_t.add_theme_constant_override("separation", 4)
-	margin_t.add_child(vbox_t)
+	var icono := TextureRect.new()
+	icono.anchor_right  = 1.0
+	icono.anchor_bottom = 1.0
+	icono.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icono.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icono.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	icono.texture = preload("res://Scenes/UI/kabawil.svg")
+	logo = icono
+	logo_wrap.add_child(icono)
 
-	var titulo := _label("KAB'AWIL CHESS", 26, COLOR_DORADO)
-	titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox_t.add_child(titulo)
+	var lbl_titulo_logo := _label("K A B ' A W I L", 17, COLOR_DORADO)
+	lbl_titulo_logo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl_titulo_logo.anchor_right  = 1.0
+	lbl_titulo_logo.offset_top    = 8
+	lbl_titulo_logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	logo_wrap.add_child(lbl_titulo_logo)
 
-	var subtitulo := _label("✧ La Invasión hacia América en un tablero ✧", 12, COLOR_TEXTO_MUTED)
+	var lbl_subtitulo_logo := _label("L A   I N V A S I Ó N", 10, Color(0.0, 0.9, 0.46, 1.0))
+	lbl_subtitulo_logo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl_subtitulo_logo.anchor_right  = 1.0
+	lbl_subtitulo_logo.anchor_top    = 1.0
+	lbl_subtitulo_logo.offset_top    = -26
+	lbl_subtitulo_logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	logo_wrap.add_child(lbl_subtitulo_logo)
+
+	vbox.add_child(logo_wrap)
+
+	# Subtítulo con fondo translúcido para que se lea sobre la imagen de fondo
+	var chip_subtitulo := PanelContainer.new()
+	chip_subtitulo.add_theme_stylebox_override("panel", _estilo_panel(12, Color(0.0, 0.0, 0.0, 0.45), Color(0, 0, 0, 0), 0))
+	var margin_chip := MarginContainer.new()
+	margin_chip.add_theme_constant_override("margin_left",   14)
+	margin_chip.add_theme_constant_override("margin_right",  14)
+	margin_chip.add_theme_constant_override("margin_top",    6)
+	margin_chip.add_theme_constant_override("margin_bottom", 6)
+	chip_subtitulo.add_child(margin_chip)
+
+	var subtitulo := _label("✧ Mayas contra el Reino de España ✧", 12, COLOR_TEXTO)
 	subtitulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox_t.add_child(subtitulo)
+	margin_chip.add_child(subtitulo)
 
-	vbox.add_child(panel_titulo)
+	var centro_chip := CenterContainer.new()
+	centro_chip.add_child(chip_subtitulo)
+	vbox.add_child(centro_chip)
 
 	# Botones principales
 	var vbox_botones := VBoxContainer.new()

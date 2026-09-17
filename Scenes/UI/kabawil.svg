@@ -1,0 +1,191 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 720" width="100%" height="100%">
+  <defs>
+    <!-- GRADIENTS -->
+    <linearGradient id="gold-maya" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF59D" />
+      <stop offset="40%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#5D4037" />
+    </linearGradient>
+
+    <linearGradient id="jade-deep" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00E676" />
+      <stop offset="50%" stop-color="#00897B" />
+      <stop offset="100%" stop-color="#00352C" />
+    </linearGradient>
+
+    <linearGradient id="stone-carved" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#B0BEC5" />
+      <stop offset="50%" stop-color="#455A64" />
+      <stop offset="100%" stop-color="#1C272C" />
+    </linearGradient>
+
+    <linearGradient id="obsidian-blade" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#455A64" />
+      <stop offset="50%" stop-color="#1C2526" />
+      <stop offset="100%" stop-color="#000000" />
+    </linearGradient>
+
+    <linearGradient id="wood-carved" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A1887F" />
+      <stop offset="50%" stop-color="#4E342E" />
+      <stop offset="100%" stop-color="#1B0E07" />
+    </linearGradient>
+
+    <!-- DROP SHADOW FILTER -->
+    <filter id="drop-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.85"/>
+    </filter>
+  </defs>
+
+  <!-- TOP DECORATIVE MAYAN BORDER & TITLE -->
+  <g filter="url(#drop-shadow)">
+    <!-- Left Mayan Spiral Fret Motif (Matching Reference Chart) -->
+    <g transform="translate(25, 20)" fill="none" stroke="url(#gold-maya)" stroke-width="3">
+      <path d="M 0 0 H 60 V 30 H 20 V 10 H 40 V 20 H 30" />
+      <rect x="-5" y="-5" width="70" height="40" stroke="url(#gold-maya)" stroke-width="1.5"/>
+    </g>
+
+    <!-- Right Mayan Spiral Fret Motif -->
+    <g transform="translate(515, 20) scale(-1, 1)" fill="none" stroke="url(#gold-maya)" stroke-width="3">
+      <path d="M 0 0 H -60 V 30 H -20 V 10 H -40 V 20 H -30" />
+      <rect x="5" y="-5" width="-70" height="40" stroke="url(#gold-maya)" stroke-width="1.5"/>
+    </g>
+
+    <!-- TITLE: KAB'AWIL -->
+    <text x="300" y="48" font-family="'Trajan Pro', 'Cinzel', 'Georgia', serif" font-size="36" font-weight="900" fill="url(#gold-maya)" text-anchor="middle" letter-spacing="8">
+      KAB'AWIL
+    </text>
+  </g>
+
+  <!-- BACKGROUND SOLAR DISC WITH GLYPH BORDER -->
+  <g filter="url(#drop-shadow)">
+    <circle cx="300" cy="330" r="230" fill="#0A0F12" opacity="0.9" />
+    <circle cx="300" cy="330" r="218" fill="none" stroke="url(#gold-maya)" stroke-width="3" stroke-dasharray="16 8 4 8" opacity="0.6" />
+  </g>
+
+  <!-- CROSSED MACUAHUITLS (MAYA WAR WEAPONS) -->
+  <g filter="url(#drop-shadow)">
+    <!-- Macuahuitl Left-to-Right -->
+    <g transform="rotate(-38 300 330)">
+      <rect x="288" y="90" width="24" height="440" rx="3" fill="url(#wood-carved)" stroke="url(#gold-maya)" stroke-width="1.5"/>
+      <rect x="285" y="460" width="30" height="50" rx="2" fill="url(#jade-deep)"/>
+      <circle cx="300" cy="525" r="14" fill="url(#gold-maya)"/>
+      <!-- Obsidian Blades -->
+      <path d="M 288 120 L 268 132 L 288 148 L 268 160 L 288 176 L 268 188 L 288 204 L 268 216 L 288 232 L 268 244 L 288 260 L 268 272 L 288 288 Z" fill="url(#obsidian-blade)"/>
+      <path d="M 312 120 L 332 132 L 312 148 L 332 160 L 312 176 L 332 188 L 312 204 L 332 216 L 312 232 L 332 244 L 312 260 L 332 272 L 312 288 Z" fill="url(#obsidian-blade)"/>
+    </g>
+
+    <!-- Macuahuitl Right-to-Left -->
+    <g transform="rotate(38 300 330)">
+      <rect x="288" y="90" width="24" height="440" rx="3" fill="url(#wood-carved)" stroke="url(#gold-maya)" stroke-width="1.5"/>
+      <rect x="285" y="460" width="30" height="50" rx="2" fill="url(#jade-deep)"/>
+      <circle cx="300" cy="525" r="14" fill="url(#gold-maya)"/>
+      <!-- Obsidian Blades -->
+      <path d="M 288 120 L 268 132 L 288 148 L 268 160 L 288 176 L 268 188 L 288 204 L 268 216 L 288 232 L 268 244 L 288 260 L 268 272 L 288 288 Z" fill="url(#obsidian-blade)"/>
+      <path d="M 312 120 L 332 132 L 312 148 L 332 160 L 312 176 L 332 188 L 312 204 L 332 216 L 312 232 L 332 244 L 312 260 L 332 272 L 312 288 Z" fill="url(#obsidian-blade)"/>
+    </g>
+  </g>
+
+  <!-- CENTRAL SHIELD & GLYPH ALPHABET GRID COMPOSITE -->
+  <g filter="url(#drop-shadow)">
+    <!-- Outer Shield Ring -->
+    <circle cx="300" cy="330" r="185" fill="url(#stone-carved)" stroke="url(#gold-maya)" stroke-width="8"/>
+    <circle cx="300" cy="330" r="170" fill="none" stroke="url(#jade-deep)" stroke-width="4"/>
+
+    <!-- MAIN GLYPH BLOCK TABLET FRAME (CARTOUCHE) -->
+    <rect x="175" y="205" width="250" height="250" rx="35" fill="#0D1317" stroke="url(#gold-maya)" stroke-width="6"/>
+    <rect x="183" y="213" width="234" height="234" rx="27" fill="none" stroke="url(#jade-deep)" stroke-width="2.5"/>
+
+    <!-- GLYPH BLOCK 1 (Top Left - Profile Face with Ear Spool & Eye Spiral - 'G/N Style') -->
+    <g transform="translate(195, 223)">
+      <rect x="0" y="0" width="100" height="100" rx="18" fill="url(#stone-carved)" stroke="url(#gold-maya)" stroke-width="2.5"/>
+      <rect x="5" y="5" width="90" height="90" rx="14" fill="none" stroke="url(#gold-maya)" stroke-width="1" stroke-dasharray="4 2"/>
+      <!-- Face Details -->
+      <path d="M 30 25 C 50 20, 75 35, 70 65 C 65 80, 45 85, 30 80 Z" fill="url(#gold-maya)"/>
+      <!-- Eye -->
+      <rect x="38" y="35" width="20" height="15" rx="4" fill="#0D1317" stroke="url(#stone-carved)" stroke-width="1.5"/>
+      <circle cx="48" cy="42" r="3" fill="url(#gold-maya)"/>
+      <!-- Ear Spool -->
+      <circle cx="22" cy="50" r="7" fill="url(#jade-deep)" stroke="url(#gold-maya)" stroke-width="1.5"/>
+      <!-- Mouth Volute / Nose -->
+      <path d="M 60 55 C 75 55, 80 70, 68 75 C 58 78, 55 68, 62 65" fill="none" stroke="url(#stone-carved)" stroke-width="2"/>
+      <!-- Side Affix Dots -->
+      <circle cx="88" cy="35" r="3" fill="url(#gold-maya)"/>
+      <circle cx="88" cy="50" r="3" fill="url(#gold-maya)"/>
+      <circle cx="88" cy="65" r="3" fill="url(#gold-maya)"/>
+    </g>
+
+    <!-- GLYPH BLOCK 2 (Top Right - Central Emblem Symbol with Inner Border - 'H/E Style') -->
+    <g transform="translate(305, 223)">
+      <rect x="0" y="0" width="100" height="100" rx="18" fill="url(#stone-carved)" stroke="url(#gold-maya)" stroke-width="2.5"/>
+      <rect x="5" y="5" width="90" height="90" rx="14" fill="none" stroke="url(#gold-maya)" stroke-width="1" stroke-dasharray="4 2"/>
+      <!-- Inner Emblem Box -->
+      <rect x="25" y="25" width="50" height="50" rx="8" fill="#0D1317" stroke="url(#gold-maya)" stroke-width="2"/>
+      <!-- Chessboard Accent inside Glyph -->
+      <rect x="30" y="30" width="20" height="20" fill="url(#gold-maya)"/>
+      <rect x="50" y="50" width="20" height="20" fill="url(#gold-maya)"/>
+      <!-- Top Superfix Element -->
+      <path d="M 30 15 Q 50 8, 70 15 L 65 22 Q 50 18, 35 22 Z" fill="url(#jade-deep)" stroke="url(#gold-maya)" stroke-width="1"/>
+      <circle cx="50" cy="12" r="3" fill="url(#gold-maya)"/>
+      <!-- Subfix Dots -->
+      <circle cx="35" cy="84" r="4" fill="url(#jade-deep)"/>
+      <circle cx="50" cy="84" r="4" fill="url(#jade-deep)"/>
+      <circle cx="65" cy="84" r="4" fill="url(#jade-deep)"/>
+    </g>
+
+    <!-- GLYPH BLOCK 3 (Bottom Left - Animal/Jaguar Open Jaw - 'A/Q Style') -->
+    <g transform="translate(195, 333)">
+      <rect x="0" y="0" width="100" height="100" rx="18" fill="url(#stone-carved)" stroke="url(#gold-maya)" stroke-width="2.5"/>
+      <rect x="5" y="5" width="90" height="90" rx="14" fill="none" stroke="url(#gold-maya)" stroke-width="1" stroke-dasharray="4 2"/>
+      <!-- Snout & Ear -->
+      <path d="M 25 30 C 45 20, 75 25, 75 50 C 75 60, 50 65, 30 60 Z" fill="url(#gold-maya)"/>
+      <!-- Fangs / Snarl -->
+      <path d="M 45 55 L 52 72 L 60 55" fill="#FFFFFF" stroke="url(#gold-maya)" stroke-width="1"/>
+      <path d="M 60 55 C 75 65, 75 80, 60 82 C 48 84, 40 70, 50 68" fill="none" stroke="url(#stone-carved)" stroke-width="2"/>
+      <!-- Ear Spool -->
+      <circle cx="25" cy="35" r="6" fill="url(#jade-deep)" stroke="url(#gold-maya)" stroke-width="1"/>
+      <!-- Left Affix Bar & Dots (Mayan number bar) -->
+      <rect x="8" y="30" width="5" height="40" rx="2" fill="url(#gold-maya)"/>
+    </g>
+
+    <!-- GLYPH BLOCK 4 (Bottom Right - Profile Head with Headdress - 'Y/JJ Style') -->
+    <g transform="translate(305, 333)">
+      <rect x="0" y="0" width="100" height="100" rx="18" fill="url(#stone-carved)" stroke="url(#gold-maya)" stroke-width="2.5"/>
+      <rect x="5" y="5" width="90" height="90" rx="14" fill="none" stroke="url(#gold-maya)" stroke-width="1" stroke-dasharray="4 2"/>
+      <!-- Head Profile -->
+      <path d="M 35 35 C 55 25, 75 40, 70 75 C 50 85, 30 75, 35 35 Z" fill="url(#gold-maya)"/>
+      <!-- Headdress Crown -->
+      <path d="M 30 25 C 50 15, 70 20, 80 28 L 70 38 C 58 30, 42 28, 30 35 Z" fill="url(#jade-deep)" stroke="url(#gold-maya)" stroke-width="1"/>
+      <!-- Eye -->
+      <circle cx="52" cy="48" r="5" fill="#0D1317"/>
+      <circle cx="53" cy="47" r="2" fill="#FFFFFF"/>
+      <!-- Breath Scroll / Voice -->
+      <path d="M 65 65 C 80 65, 82 78, 72 82 C 64 85, 60 75, 68 73" fill="none" stroke="url(#stone-carved)" stroke-width="2"/>
+      <!-- Right Affix Volute -->
+      <path d="M 85 40 C 95 40, 95 60, 85 65" stroke="url(#gold-maya)" stroke-width="2" fill="none"/>
+    </g>
+  </g>
+
+  <!-- BOTTOM BANNER & SUBTITLE -->
+  <g filter="url(#drop-shadow)">
+    <!-- Bottom Decorative Frame (Matching Reference Chart Footer) -->
+    <rect x="30" y="640" width="540" height="50" rx="6" fill="#0A0F12" stroke="url(#gold-maya)" stroke-width="3"/>
+
+    <!-- Left Fret Accent -->
+    <g transform="translate(40, 648)" fill="none" stroke="url(#gold-maya)" stroke-width="2">
+      <path d="M 0 0 H 30 V 16 H 10 V 8 H 20 V 12" />
+      <rect x="-3" y="-3" width="36" height="22" stroke="url(#gold-maya)" stroke-width="1"/>
+    </g>
+
+    <!-- Right Fret Accent -->
+    <g transform="translate(530, 648) scale(-1, 1)" fill="none" stroke="url(#gold-maya)" stroke-width="2">
+      <path d="M 0 0 H 30 V 16 H 10 V 8 H 20 V 12" />
+      <rect x="-3" y="-3" width="36" height="22" stroke="url(#gold-maya)" stroke-width="1"/>
+    </g>
+
+    <!-- SUBTITLE: LA INVASIÓN -->
+    <text x="300" y="674" font-family="'Trajan Pro', 'Cinzel', 'Georgia', serif" font-size="22" font-weight="bold" fill="#00E676" text-anchor="middle" letter-spacing="10">
+      LA INVASIÓN
+    </text>
+  </g>
+</svg>
