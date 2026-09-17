@@ -8,7 +8,7 @@ enum color_player {WHITE, BLACK}
 @export var type_color_player : color_player
 
 const init_pos_pieces = [
-	[3,2,1,4,5,1,2,3],
+	[3,1,2,4,5,2,1,3],
 	[0,0,0,0,0,0,0,0]
 ]
 
@@ -47,15 +47,23 @@ func move_piece(board: Board, pos: Vector2i):
 	
 	piece.global_position = pos_global
 	piece.actual_pos = pos
+	
+	#============condiciones============
+	piece.is_first_move = false
+	if pos.y == board.SIZE.y-1:
+		piece.is_in_other_edge = true
+	else:
+		piece.is_in_other_edge = false
+	
 
 func set_danger_points(other: ChessPlayer, board: Board):
-	other.danger_points.clear()
+	other.danger_points = []
 	for piece in self.my_pieces:
 		var r = piece.get_possible_moves(
 			self,
 			piece.actual_pos,
 			board,
-			piece.Pawn_valid_move()
+			piece.get_my_valid_moves(piece.actual_pos, board, self)
 		)
 		var new_ = r.filter(func(x): return not other.danger_points.has(x))
 		other.danger_points.append_array(new_)
@@ -68,8 +76,8 @@ func check_jaque():
 
 
 #TODO MEJORAR ALGORITMO DE MOVER PIEZAS CON JAQUE Y DETECTAR JAQUEMATE
-func valid_moves_jaque(piece: Piece):
-	var p = piece.Pawn_valid_move()
+func valid_moves_jaque(board: Board, piece: Piece):
+	var p = piece.get_my_valid_moves(piece.actual_pos, board, self)
 	var result = []
 	
 	if piece.select_type == 5: #king:

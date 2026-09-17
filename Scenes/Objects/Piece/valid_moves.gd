@@ -1,4 +1,5 @@
-class_name ValidMoves extends RefCounted
+class_name ValidMoves 
+extends RefCounted
 
 #Rectos
 const R = [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
@@ -11,96 +12,114 @@ const L = [
 ]
 
 
-static func movimientos_rectos(board: Board, start: Vector2i, color_id: int, max_n: int) -> Array:
+static func _movimientos_rectos(board: Board, start: Vector2i, player: ChessPlayer, max_n: int) -> Array:
 	var validos = []
 	for dir in R:
 		for n in range(1, max_n + 1): 
-			var pos = start + (dir * n)
+			var pos = utils.check_operation_vec_player(player.ID_PLAYER, start, dir*n)
 			if not Piece.filt_pos_limits(pos, board):
 				break
 			var cell = board.matrixPos[pos.y][pos.x]
 			if cell == 0:
-				validos.append(pos)
-			elif cell == color_id:
+				validos.append(dir * n)
+			elif cell == player.ID_PLAYER:
 				break 
 			else:
-				validos.append(pos)
+				validos.append( dir * n)
 				break
 	return validos
 
-static func movimientos_diagonales(board: Board, start: Vector2i, color_id: int, max_n: int) -> Array:
+static func _movimientos_diagonales(board: Board, start: Vector2i, player: Player, max_n: int) -> Array:
 	var validos = []
 	for dir in D:
 		for n in range(1, max_n + 1):
-			var pos = start + (dir * n)
+			var pos = utils.check_operation_vec_player(player.ID_PLAYER, start, dir*n)
 			if not Piece.filt_pos_limits(pos, board):
 				break
 			var cell = board.matrixPos[pos.y][pos.x]
 			if cell == 0:
-				validos.append(pos)
-			elif cell == color_id:
+				validos.append(dir*n)
+			elif cell == player.ID_PLAYER:
 				break
 			else:
-				validos.append(pos)
+				validos.append(dir*n)
 				break
 	return validos
 
-static func movimientos_L(board: Board, start: Vector2i, color_id: int) -> Array:
+static func _movimientos_L(board: Board, start: Vector2i, player: ChessPlayer) -> Array:
 	var validos = []
 	for dir in L:
-		var pos = start + dir
+		var pos =  utils.check_operation_vec_player(player.ID_PLAYER, start, dir)
 		if Piece.filt_pos_limits(pos, board):
-			if board.matrixPos[pos.y][pos.x] != color_id:
-				validos.append(pos)
+			if board.matrixPos[pos.y][pos.x] != player.ID_PLAYER:
+				validos.append(dir)
 	return validos
 
 #Peones
-static func mov_peon(board: Board, start: Vector2i, color_id: int, is_first: bool) -> Array:
+static func mov_peon(board: Board, player: ChessPlayer, pos: Vector2i, is_first: bool) -> Array:
 	var validos = []
-	var forward = -1 if color_id == 1 else 1 
-	
 	# Movimiento recto
-	var pos_f1 = start + Vector2i(0, forward)
-	if Piece.filt_pos_limits(pos_f1, board) and board.matrixPos[pos_f1.y][pos_f1.x] == 0:
-		validos.append(pos_f1)
-		if is_first: # Solo si es su primer movimiento[cite: 1]
-			var pos_f2 = start + Vector2i(0, forward * 2)
-			if board.matrixPos[pos_f2.y][pos_f2.x] == 0:
-				validos.append(pos_f2)
-	
+	var r = Vector2i(0, 1)
+	#if Piece.filt_pos_limits(r, board) and board.matrixPos[r.y][r.x] == 0:
+	var pos1 = utils.check_operation_vec_player(player.ID_PLAYER, pos, r)
+	if board.matrixPos[pos1.y][pos1.x] == 0:
+		validos.append(r)
+		if is_first: 
+			#var pos_f2 = Vector2i(0, 2)
+			#if board.matrixPos[pos_f2.y][pos_f2.x] == 0:
+			validos.append(Vector2i(0, 2))
+		
 	#Ataques diagonales
-	var attacks = [Vector2i(1, forward), Vector2i(-1, forward)]
-	for atk in attacks:
-		var pos_atk = start + atk
+	for v in [Vector2i(-1,0),Vector2i(1,0)]:
+		var atk = Vector2i(0, 1)
+		var pos_atk = utils.check_operation_vec_player(player.ID_PLAYER, pos, atk)
+		pos_atk += v
+		atk += v
+		print("Pos_atk: ", pos_atk)
+		print("atk: ", atk)
 		if Piece.filt_pos_limits(pos_atk, board):
 			var cell = board.matrixPos[pos_atk.y][pos_atk.x]
-			if cell != 0 and cell != color_id:
-				validos.append(pos_atk)
+			print(cell)
+			print(player.type_color_player)
+			if cell != 0 and cell != player.ID_PLAYER:
+				print("Se añadio: ", atk, "para el: ", pos_atk)
+				validos.append(atk)
 	return validos
 
 
 #Caballos
-static func mov_caballo(board: Board, start: Vector2i, color_id: int) -> Array:
-	return movimientos_L(board, start, color_id)
+static func mov_caballo(board: Board, start: Vector2i, player: ChessPlayer) -> Array:
+	return _movimientos_L(board, start, player)
 
 #Alfiles
-static func mov_alfil(board: Board, start: Vector2i, color_id: int) -> Array:
-	return movimientos_diagonales(board, start, color_id, 8) 
+static func mov_alfil(board: Board, start: Vector2i, player: Player) -> Array:
+	return _movimientos_diagonales(board, start, player, board.SIZE.x) 
 
 #Torres
-static func mov_torre(board: Board, start: Vector2i, color_id: int) -> Array:
-	return movimientos_rectos(board, start, color_id, 8)
+static func mov_torre(board: Board, start: Vector2i, player: ChessPlayer) -> Array:
+	return _movimientos_rectos(board, start, player, board.SIZE.x)
 
 #Reina
-static func mov_reina(board: Board, start: Vector2i, color_id: int) -> Array:
+static func mov_reina(board: Board, start: Vector2i, player:ChessPlayer) -> Array:
 	# Combina rectos y diagonales
-	var validos = movimientos_rectos(board, start, color_id, 8)
-	validos.append_array(movimientos_diagonales(board, start, color_id, 8))
+	var validos = _movimientos_rectos(board, start, player, board.SIZE.x)
+	validos.append_array(_movimientos_diagonales(board, start, player, board.SIZE.x))
 	return validos
 
 #Rey
-static func mov_rey(board: Board, start: Vector2i, color_id: int) -> Array:
+static func mov_rey(board: Board, start: Vector2i, player: ChessPlayer) -> Array:
 	# Igual que la reina pero solo con una casilla 
-	var validos = movimientos_rectos(board, start, color_id, 1)
-	validos.append_array(movimientos_diagonales(board, start, color_id, 1))
+	var r = _movimientos_rectos(board, start, player, 1)
+	r.append_array(_movimientos_diagonales(board, start, player, 1))
+	
+	var validos = []
+	print("PARA EL REY")
+	print(player.danger_points)
+	for n in r:
+		print("=============")
+		print("Procesando: ", n)
+		if not utils.check_operation_vec_player(player.ID_PLAYER, start, n) in player.danger_points:
+			print("Aceptado: ", n)
+			validos.append(n)
+	
 	return validos

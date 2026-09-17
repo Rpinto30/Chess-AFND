@@ -79,7 +79,7 @@ func load_global_data():
 func _ready() -> void:
 	#players = utils.obtener_nodos_por_tipo(self, ChessPlayer).slice(0,2)
 	board = utils.obtener_nodos_por_tipo(board_parent, Board)[0]
-	default_data('1vs1', 1, 1)
+	default_data('1vs1', 0, 0)
 	#load_global_data()
 	for i in players:
 		set_pieces(i, i.ID_PLAYER)

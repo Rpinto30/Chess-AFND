@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://3iivcunw2cg0"]
+
+[ext_resource type="PackedScene" uid="uid://bna5si1vhmhc5" path="res://Scenes/Objects/Chess/Chess.scn" id="1_6x5ix"]
+[ext_resource type="Script" uid="uid://baapbo58agnwk" path="res://Scenes/game_manager.gd" id="1_535oe"]
+[ext_resource type="PackedScene" uid="uid://b71uny8tmw428" path="res://Scenes/Objects/Player/Player.tscn" id="2_1kbfr"]
+[ext_resource type="Texture2D" uid="uid://ekw2lqcn2tuf" path="res://Resources/Board/complement2.png" id="2_353r0"]
+[ext_resource type="PackedScene" uid="uid://1qsp47vv2jwb" path="res://Scenes/Objects/Player/bot.tscn" id="4_7vjhc"]
+
+[node name="PlayScene" type="Node2D" unique_id=1382223566 node_paths=PackedStringArray("board_parent", "label")]
+script = ExtResource("1_535oe")
+board_parent = NodePath("Chess")
+label = NodePath("UI/GridLayout/Label")
+player_ref = ExtResource("2_1kbfr")
+bot_ref = ExtResource("4_7vjhc")
+
+[node name="Complement2" type="Sprite2D" parent="." unique_id=1413793942]
+visible = false
+modulate = Color(0.7708395, 0.77083945, 0.77083945, 1)
+position = Vector2(162, 300)
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("2_353r0")
+
+[node name="Chess" parent="." unique_id=820938813 instance=ExtResource("1_6x5ix")]
+position = Vector2(37, 191)
+scale = Vector2(2, 2)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=790168747]
+position = Vector2(166, 294)
+zoom = Vector2(2.17, 2.17)
+
+[node name="Bot" parent="." unique_id=1294911720 node_paths=PackedStringArray("chessBoard") instance=ExtResource("4_7vjhc")]
+position = Vector2(0, -1)
+chessBoard = NodePath("../Chess")
+type_color_player = 1
+
+[node name="UI" type="Control" parent="." unique_id=206941260]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridLayout" type="Container" parent="UI" unique_id=1645724016]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Panel" type="Panel" parent="UI/GridLayout" unique_id=446811196]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/GridLayout" unique_id=623059191]
+layout_mode = 2
+text = "Turno de: "

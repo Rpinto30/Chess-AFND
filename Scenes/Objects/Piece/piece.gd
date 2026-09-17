@@ -18,10 +18,16 @@ var list_data = ["Pawn", #0
 	"Queen", #4
 	"King"] #5
 
+
+#===========================DATOS GENERALES=======================
 var color: color_player
 var select_type: Type
 var player_owner: ChessPlayer
 var actual_pos: Vector2i
+
+#===========================CONDICIONES RELEVANTES=======================
+var is_first_move: bool = true
+var is_in_other_edge: bool = false
 
 static func filt_jaque_pos(player: ChessPlayer, pos: Vector2i, piece):
 	print("EN JAQUE===========================")
@@ -58,18 +64,36 @@ func eat_piece(player: ChessPlayer):
 
 func get_possible_moves(player:ChessPlayer, pos: Vector2i, board:Board, movements: Array):
 	var valids = []
+	print("Movements: ",movements)
 	for comb in movements:
-		var r = pos-comb if player.ID_PLAYER == 1 else pos+comb
+		print(comb)
+		var r = utils.check_operation_vec_player(player.ID_PLAYER, pos, comb)
+		#var r = pos-comb if player.ID_PLAYER == 1 else pos+comb
 		var condition = (Piece.filt_pos_limits(r, board) and 
 		Piece.filt_pos_own(r, board, player))
 		if condition:
 			valids.append(r)
 	return valids
-	
-func Pawn_valid_move():
-	return [
-		Vector2i(1,1), 
-		Vector2i(-1,1), 
-		Vector2i(0,1), 
-		Vector2i(0,2)
-	] 
+
+func get_my_valid_moves(pos: Vector2i, board: Board, player: Player):
+	match select_type:
+		Type.Pawn:
+			return ValidMoves.mov_peon(board, player, pos, self.is_first_move)
+		Type.Knightm:
+			return ValidMoves.mov_caballo(board, pos, player)
+		Type.Bishop:
+			return ValidMoves.mov_alfil(board, pos, player)
+		Type.Rook:
+			return ValidMoves.mov_torre(board, pos, player)
+		Type.Queen:
+			return ValidMoves.mov_reina(board, pos, player)
+		Type.King:
+			return ValidMoves.mov_rey(board, pos, player)
+
+#func Pawn_valid_move():
+#	return [
+#		Vector2i(1,1), 
+#		Vector2i(-1,1), 
+#		Vector2i(0,1), 
+#		Vector2i(0,2)
+#	] 
