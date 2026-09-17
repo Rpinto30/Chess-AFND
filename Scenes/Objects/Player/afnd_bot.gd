@@ -10,7 +10,7 @@ class Estado:
 		id = id_
 		peso = peso_
 
-
+var first_call: bool = true
 var estados: Dictionary = {}  # id -> Estado
 var estado_inicial_id
 
@@ -37,12 +37,25 @@ func limpiar() -> void:
 	estados.clear()
 	estado_inicial_id = null
 
+func set_first_move(id_actual, id_prev, limit: int, generador: Callable) -> void:
+	var posibles: Array = generador.call(id_actual)
+	var p = posibles.pick_random()
+	if p:
+		print("ALEATORIO")
+		var clave = p["clave"]
+		var destino_id = p["destino_id"]
+		var peso = p.get("peso", 0.0)
+		agregar_transicion(id_actual, clave, destino_id, peso)
+		construir_recursivo(destino_id, id_actual, limit - 1, generador)
+		return 
 
 func construir_recursivo(id_actual, id_prev, limit: int, generador: Callable) -> void:
 	if id_actual == id_prev or limit <= 0:
 		return
 
 	var posibles: Array = generador.call(id_actual)
+		
+	#print("posible desde ", id_actual, " Pasamos a: ", posibles)
 	for paso in posibles:
 		var clave = paso["clave"]
 		var destino_id = paso["destino_id"]
@@ -50,9 +63,8 @@ func construir_recursivo(id_actual, id_prev, limit: int, generador: Callable) ->
 
 		agregar_transicion(id_actual, clave, destino_id, peso)
 		construir_recursivo(destino_id, id_actual, limit - 1, generador)
-
-
-
+	first_call = false
+	
 func sumar_rama(id) -> float:
 	var estado = obtener_estado(id)
 	if estado == null:
@@ -67,9 +79,10 @@ func sumar_rama(id) -> float:
 func elegir_mejor_camino(id_desde = null) -> Variant:
 	var desde = id_desde if id_desde != null else estado_inicial_id #Comenzamos desde el estado inicial si no se especifica otro
 	var estado = obtener_estado(desde)
+	print("ELIGIENDO")
 	if estado == null or estado.transiciones.is_empty():#Si no hay transiciones, no hay camino que elegir
 		return null
-
+	
 	var puntajes: Dictionary = {}
 	for clave in estado.transiciones:
 		puntajes[clave] = sumar_rama(estado.transiciones[clave].id) #Calculamos el puntaje total de cada camino posible desde el estado actual
@@ -80,5 +93,5 @@ func elegir_mejor_camino(id_desde = null) -> Variant:
 		if puntajes[clave] > mejor_puntaje:
 			mejor_puntaje = puntajes[clave]
 			mejor_clave = clave
-
+	print(mejor_clave)
 	return mejor_clave

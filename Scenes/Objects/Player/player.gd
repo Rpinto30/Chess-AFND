@@ -44,6 +44,7 @@ func set_board_points(piece_pos: Vector2i, possible_pos, type_point: Vector2i = 
 			board_points.set_point(r, type_point)
 			added_points.append(r)
 
+#======================================SIGNALS METHODS =========================================
 func cap_signal(touched: bool, pos: Vector2i):
 	if touched:
 		selected_piece = Vector2i(-1,-1)

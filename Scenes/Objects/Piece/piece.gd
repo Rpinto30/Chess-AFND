@@ -74,7 +74,7 @@ func get_possible_moves(player:ChessPlayer, pos: Vector2i, board:Board, movement
 			valids.append(r)
 	return valids
 
-func get_my_valid_moves(pos: Vector2i, board: Board, player: Player, 
+func get_my_valid_moves(pos: Vector2i, board: Board, player: ChessPlayer, 
 	limits = true, own_piece = false, only_attack = false):
 	match select_type:
 		Type.Pawn:

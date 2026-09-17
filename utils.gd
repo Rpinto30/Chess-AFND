@@ -9,6 +9,22 @@ static func obtener_nodos_por_tipo(nodo_raiz: Node, tipo_clase) -> Array:
 		resultado.append_array(obtener_nodos_por_tipo(hijo, tipo_clase))
 	return resultado
 
+const PREFIJOS_NOTACION = {
+	Piece.Type.Pawn: "",
+	Piece.Type.Knightm: "C",
+	Piece.Type.Bishop: "A",
+	Piece.Type.Rook: "T",
+	Piece.Type.Queen: "D",
+	Piece.Type.King: "R",
+}
+
+static func set_notation(pieza: Piece, destino: Vector2i) -> String:
+	var letras = "ABCDEFGH"
+	var letra = letras[destino.x] if destino.x < letras.length() else "?"
+	var numero = destino.y + 1
+	var prefijo = PREFIJOS_NOTACION.get(pieza.select_type, "")
+	return prefijo + letra + str(numero)
+
 static func check_operation_vec_player(ID_PLAYER: int, piece_pos:Vector2i, combination:Vector2i):
 	if ID_PLAYER == 1:
 		return Vector2i(piece_pos.x+combination.x, piece_pos.y-combination.y)

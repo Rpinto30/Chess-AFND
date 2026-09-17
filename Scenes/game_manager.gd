@@ -79,7 +79,7 @@ func load_global_data():
 func _ready() -> void:
 	#players = utils.obtener_nodos_por_tipo(self, ChessPlayer).slice(0,2)
 	board = utils.obtener_nodos_por_tipo(board_parent, Board)[0]
-	default_data('1vs1', 0, 0)
+	default_data('bot', 1, 0)
 	#load_global_data()
 	for i in players:
 		set_pieces(i, i.ID_PLAYER)
@@ -141,10 +141,13 @@ func manager_turns():
 		else: turn = turns.P1
 		
 		#aca cambia de turno, por eso uso otra vez select_player_by_turn()
-		var other = select_player_by_turn()
-		
+		var other = select_player_by_turn() #p1 -> p2
 		player.set_danger_points(other, board)
 		other.check_jaque()
+		if is_instance_of(other, Bot):
+			print("El jugador responde con: ",player.last_move_notation)
+			other.registrar_movimiento_player(player.last_move_notation)
+		
 		player.restore()
 		
 		

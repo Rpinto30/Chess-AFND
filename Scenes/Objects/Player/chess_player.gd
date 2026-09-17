@@ -25,6 +25,7 @@ var danger_points = []
 enum states_game  {NORMAL,JAQUE, JAQUEMATE}
 var in_jaque: states_game
 var in_jaquemate: bool
+var last_move_notation: String
 #tablas nio xd
 
 #=========================MOVE PIECES================================
@@ -63,7 +64,8 @@ func move_piece(board: Board, pos: Vector2i):
 			var rook = board.matrixRef[pos.y][0]
 			if rook != null:
 				enroque_move(board, rook, Vector2i(0,pos.y), Vector2i(piece.actual_pos.x+1, pos.y))
-			
+	else:
+		last_move_notation = utils.set_notation(piece, pos)
 	
 	#============condiciones============
 	piece.is_first_move = false
@@ -96,6 +98,7 @@ func set_danger_points(other: ChessPlayer, board: Board, limits = true):
 	other.danger_points = []
 	#limits = true, own_piece = true, only_attack = true
 	for piece in self.my_pieces:
+		#print(is_instance_of(self, ChessPlayer))
 		var r = piece.get_possible_moves(
 			self,
 			piece.actual_pos,
@@ -174,6 +177,7 @@ func get_pieces_with_jaque(other: ChessPlayer, board: Board, limits = true):
 func check_jaque():
 	if my_king.actual_pos in self.danger_points:
 		in_jaque = states_game.JAQUE
+		print(self.player_name, " ESTA EN JAQUE!")
 	else: in_jaque = states_game.NORMAL
 
 #JAQUE
@@ -228,3 +232,10 @@ func valid_jaquemate(board:Board):
 func load_data(): pass
 func restore(): pass
 func main(): pass
+
+# para el bot
+func registrar_movimiento_player(_notacion: String):
+	pass
+
+func actualizar_emocion():
+	pass

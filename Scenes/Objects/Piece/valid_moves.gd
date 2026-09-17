@@ -32,7 +32,7 @@ static func _movimientos_rectos(board: Board, start: Vector2i, player: ChessPlay
 					break
 	return validos
 
-static func _movimientos_diagonales(board: Board, start: Vector2i, player: Player, max_n: int, limits = true, own_piece = false) -> Array:
+static func _movimientos_diagonales(board: Board, start: Vector2i, player: ChessPlayer, max_n: int, limits = true, own_piece = false) -> Array:
 	var validos = []
 	for dir in D:
 		for n in range(1, max_n + 1):
@@ -74,7 +74,8 @@ static func mov_peon(board: Board, player: ChessPlayer, pos: Vector2i, is_first:
 		var pos1 = utils.check_operation_vec_player(player.ID_PLAYER, pos, r)
 		if board.matrixPos[pos1.y][pos1.x] == 0:
 			validos.append(r)
-			if is_first: 
+			var pos2 = utils.check_operation_vec_player(player.ID_PLAYER, pos, Vector2i(0,2))
+			if is_first and board.matrixPos[pos2.y][pos2.x] == 0: 
 				#var pos_f2 = Vector2i(0, 2)
 				#if board.matrixPos[pos_f2.y][pos_f2.x] == 0:
 				validos.append(Vector2i(0, 2))
@@ -101,7 +102,7 @@ static func mov_caballo(board: Board, start: Vector2i, player: ChessPlayer, own_
 	return _movimientos_L(board, start, player, own_piece)
 
 #Alfiles
-static func mov_alfil(board: Board, start: Vector2i, player: Player, limits= true, own_piece = false) -> Array:
+static func mov_alfil(board: Board, start: Vector2i, player: ChessPlayer, limits= true, own_piece = false) -> Array:
 	return _movimientos_diagonales(board, start, player, board.SIZE.x, limits, own_piece) 
 
 #Torres
