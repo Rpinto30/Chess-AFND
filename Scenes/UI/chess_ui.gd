@@ -1,5 +1,7 @@
 extends Control
 
+signal volver_al_menu
+
 # ─────────────────────────────────────────────
 #  COLORES DEL TEMA
 # ─────────────────────────────────────────────
@@ -10,6 +12,8 @@ const COLOR_TEXTO         := Color(0.91, 0.78, 0.48, 1.0)
 const COLOR_TEXTO_MUTED   := Color(0.63, 0.47, 0.25, 1.0)
 const COLOR_MAYA          := Color(0.29, 0.54, 0.19, 1.0)
 const COLOR_SPAIN         := Color(0.75, 0.22, 0.17, 1.0)
+const COLOR_DORADO        := Color(0.85, 0.65, 0.13, 1.0)
+const COLOR_OVERLAY       := Color(0.04, 0.02, 0.0, 0.82)
 
 # ─────────────────────────────────────────────
 #  ESTADO
@@ -28,8 +32,18 @@ var label_caps_maya     : Label
 var label_caps_spain    : Label
 var label_tiempo_maya   : Label
 var label_tiempo_spain  : Label
+var icono_maya  : TextureRect
+var icono_spain : TextureRect
 var pill_turno_maya  : Button
 var pill_turno_spain : Button
+
+var overlay_fin_partida     : Control
+var label_fin_ganador       : Label
+var panel_fin_ganador       : PanelContainer
+var label_fin_caps_maya     : Label
+var label_fin_caps_spain    : Label
+var label_fin_tiempo_maya   : Label
+var label_fin_tiempo_spain  : Label
 
 # ─────────────────────────────────────────────
 #  ENTRADA PRINCIPAL
@@ -66,6 +80,9 @@ func _ready() -> void:
 	# ── Secciones inferiores ──
 	vbox.add_child(_crear_capturadas())
 	vbox.add_child(_crear_tabla_afnd())
+
+	# ── Popup de fin de partida (oculto hasta llamar mostrar_fin_partida) ──
+	_crear_popup_fin_partida()
 
 # ─────────────────────────────────────────────
 #  HELPERS DE ESTILO
@@ -217,6 +234,17 @@ func _crear_player_pill(nombre: String, tiempo: String,
 	dot.custom_minimum_size = Vector2(8, 8)
 	dot_wrap.add_child(dot)
 	hbox.add_child(dot_wrap)
+
+	var icono := TextureRect.new()
+	icono.custom_minimum_size = Vector2(18, 18)
+	icono.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icono.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icono.texture = preload("res://Scenes/UI/mayas.svg") if es_maya else preload("res://Scenes/UI/españoles.svg")
+	hbox.add_child(icono)
+	if es_maya:
+		icono_maya = icono
+	else:
+		icono_spain = icono
 
 	var lbl_n := _label(nombre, 12, COLOR_TEXTO if es_activo else COLOR_TEXTO_MUTED)
 	lbl_n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -403,6 +431,168 @@ func actualizar_tiempo(es_maya: bool, segundos: int) -> void:
 
 func _formato_tiempo(segundos: int) -> String:
 	return "%d:%02d" % [segundos / 60, segundos % 60]
+
+func establecer_iconos(icono_bando_maya: Texture2D, icono_bando_spain: Texture2D) -> void:
+	if icono_maya:
+		icono_maya.texture = icono_bando_maya
+	if icono_spain:
+		icono_spain.texture = icono_bando_spain
+
+# ─────────────────────────────────────────────
+#  POPUP · FIN DE PARTIDA
+# ─────────────────────────────────────────────
+func _boton_grande(texto: String, color_borde: Color = COLOR_DORADO) -> Button:
+	var b := Button.new()
+	b.text = texto
+	b.custom_minimum_size = Vector2(220, 0)
+	b.add_theme_color_override("font_color", COLOR_TEXTO)
+	b.add_theme_font_size_override("font_size", 15)
+	var normal := _estilo_panel(16, COLOR_FONDO_PANEL, color_borde, 2)
+	normal.content_margin_top    = 14
+	normal.content_margin_bottom = 14
+	b.add_theme_stylebox_override("normal",  normal)
+	b.add_theme_stylebox_override("hover",   _estilo_panel(16, COLOR_FONDO_PANEL * 1.4, color_borde, 2))
+	b.add_theme_stylebox_override("pressed", _estilo_panel(16, COLOR_FONDO_PANEL * 0.8, color_borde, 2))
+	b.add_theme_stylebox_override("focus",   _estilo_panel(16, COLOR_FONDO_PANEL, color_borde, 2))
+	return b
+
+func _crear_overlay_fin() -> Control:
+	var overlay := Control.new()
+	overlay.anchor_right  = 1.0
+	overlay.anchor_bottom = 1.0
+	overlay.visible = false
+
+	var fondo_oscuro := ColorRect.new()
+	fondo_oscuro.anchor_right  = 1.0
+	fondo_oscuro.anchor_bottom = 1.0
+	fondo_oscuro.color = COLOR_OVERLAY
+	overlay.add_child(fondo_oscuro)
+
+	add_child(overlay)
+	return overlay
+
+func _abrir_overlay(overlay: Control) -> void:
+	overlay.modulate.a = 0.0
+	overlay.visible = true
+	var t := create_tween()
+	t.tween_property(overlay, "modulate:a", 1.0, 0.18)
+
+func _crear_popup_fin_partida() -> void:
+	overlay_fin_partida = _crear_overlay_fin()
+
+	var centro := CenterContainer.new()
+	centro.anchor_right  = 1.0
+	centro.anchor_bottom = 1.0
+	overlay_fin_partida.add_child(centro)
+
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(300, 0)
+	panel.add_theme_stylebox_override("panel", _estilo_panel(20, COLOR_FONDO_PANEL, COLOR_DORADO, 2))
+	centro.add_child(panel)
+
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left",   22)
+	margin.add_theme_constant_override("margin_right",  22)
+	margin.add_theme_constant_override("margin_top",    20)
+	margin.add_theme_constant_override("margin_bottom", 20)
+	panel.add_child(margin)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 12)
+	margin.add_child(vbox)
+
+	var titulo := _label("¡Partida Finalizada!", 16, COLOR_DORADO)
+	titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(titulo)
+	vbox.add_child(_separador_fin())
+
+	# Banner del ganador
+	panel_fin_ganador = PanelContainer.new()
+	panel_fin_ganador.add_theme_stylebox_override("panel", _estilo_transparente(16, COLOR_DORADO, 2))
+	var margin_g := MarginContainer.new()
+	margin_g.add_theme_constant_override("margin_left",   14)
+	margin_g.add_theme_constant_override("margin_right",  14)
+	margin_g.add_theme_constant_override("margin_top",    10)
+	margin_g.add_theme_constant_override("margin_bottom", 10)
+	panel_fin_ganador.add_child(margin_g)
+	label_fin_ganador = _label("🏆  Ganador: —", 14, COLOR_DORADO)
+	label_fin_ganador.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	margin_g.add_child(label_fin_ganador)
+	vbox.add_child(panel_fin_ganador)
+
+	vbox.add_child(_separador_fin())
+
+	# Punteo (piezas capturadas por cada bando)
+	vbox.add_child(_label("Piezas capturadas", 11, COLOR_TEXTO_MUTED))
+	var fila_caps := HBoxContainer.new()
+	fila_caps.add_theme_constant_override("separation", 10)
+	vbox.add_child(fila_caps)
+	label_fin_caps_maya = _fila_resultado(fila_caps, "Mayas", COLOR_MAYA)
+	label_fin_caps_spain = _fila_resultado(fila_caps, "España", COLOR_SPAIN)
+
+	# Tiempo final de cada bando
+	vbox.add_child(_label("Tiempo restante", 11, COLOR_TEXTO_MUTED))
+	var fila_tiempo := HBoxContainer.new()
+	fila_tiempo.add_theme_constant_override("separation", 10)
+	vbox.add_child(fila_tiempo)
+	label_fin_tiempo_maya = _fila_resultado(fila_tiempo, "0:00", COLOR_MAYA)
+	label_fin_tiempo_spain = _fila_resultado(fila_tiempo, "0:00", COLOR_SPAIN)
+
+	vbox.add_child(_separador_fin())
+
+	var btn_volver := _boton_grande("🏠  Volver al Menú Principal", COLOR_DORADO)
+	btn_volver.pressed.connect(_on_volver_al_menu)
+	vbox.add_child(btn_volver)
+
+func _separador_fin() -> HSeparator:
+	var sep := HSeparator.new()
+	sep.add_theme_color_override("color", COLOR_BORDE_PANEL)
+	return sep
+
+# Crea una pastilla pequeña (usada para mostrar capturas y tiempo final por bando),
+# la agrega directamente a "padre" y devuelve el Label interno para actualizarlo después.
+func _fila_resultado(padre: Control, texto_inicial: String, color: Color) -> Label:
+	var panel := PanelContainer.new()
+	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	panel.add_theme_stylebox_override("panel", _estilo_transparente(14, color, 1))
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left",   8)
+	margin.add_theme_constant_override("margin_right",  8)
+	margin.add_theme_constant_override("margin_top",    6)
+	margin.add_theme_constant_override("margin_bottom", 6)
+	panel.add_child(margin)
+	var lbl := _label(texto_inicial, 13, color)
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	margin.add_child(lbl)
+	padre.add_child(panel)
+	return lbl
+
+# Llamar cuando la partida termina, ej: game_ui.mostrar_fin_partida(true) si ganan los Mayas.
+# empate: true si fue tablas (ignora ganador_maya).
+func mostrar_fin_partida(ganador_maya: bool, empate: bool = false) -> void:
+	if empate:
+		label_fin_ganador.text = "🤝  Empate"
+		label_fin_ganador.add_theme_color_override("font_color", COLOR_TEXTO)
+		panel_fin_ganador.add_theme_stylebox_override("panel", _estilo_transparente(16, COLOR_TEXTO_MUTED, 2))
+	else:
+		var color := COLOR_MAYA if ganador_maya else COLOR_SPAIN
+		var nombre := "Mayas" if ganador_maya else "Reino de España"
+		label_fin_ganador.text = "🏆  Ganador: %s" % nombre
+		label_fin_ganador.add_theme_color_override("font_color", color)
+		panel_fin_ganador.add_theme_stylebox_override("panel", _estilo_transparente(16, color, 2))
+
+	label_fin_caps_maya.text  = "Mayas: %d" % capturadas_maya.size()
+	label_fin_caps_spain.text = "España: %d" % capturadas_spain.size()
+	label_fin_tiempo_maya.text  = _formato_tiempo(tiempo_restante_maya)
+	label_fin_tiempo_spain.text = _formato_tiempo(tiempo_restante_spain)
+
+	_abrir_overlay(overlay_fin_partida)
+
+func _on_volver_al_menu() -> void:
+	volver_al_menu.emit()
+	# Si prefieres que esta misma escena haga el cambio directamente
+	# (en vez de que lo maneje quien escuche la señal), descomenta:
+	# get_tree().change_scene_to_file("res://MainMenu.tscn")
 
 # ─────────────────────────────────────────────
 #  CALLBACKS

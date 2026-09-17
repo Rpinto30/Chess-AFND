@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="jade-bright" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#69F0AE" />
+      <stop offset="50%" stop-color="#00C853" />
+      <stop offset="100%" stop-color="#004D40" />
+    </linearGradient>
+
+    <linearGradient id="maya-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE082" />
+      <stop offset="60%" stop-color="#FFB300" />
+      <stop offset="100%" stop-color="#E65100" />
+    </linearGradient>
+
+    <linearGradient id="obsidian-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#37474F" />
+      <stop offset="50%" stop-color="#212121" />
+      <stop offset="100%" stop-color="#000000" />
+    </linearGradient>
+
+    <filter id="shadow-maya" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#000" flood-opacity="0.75"/>
+    </filter>
+  </defs>
+
+  <!-- QUETZAL FEATHER FEATHERED RING (PLUMAZO EXTERIOR) -->
+  <g filter="url(#shadow-maya)">
+    <!-- Radiating Feathers -->
+    <path d="M 250 15 C 240 60, 260 60, 250 100 C 260 60, 240 60, 250 15 Z" fill="url(#jade-bright)"/>
+    <path d="M 333 32 C 305 70, 321 80, 298 113 C 318 80, 335 70, 333 32 Z" fill="url(#jade-bright)"/>
+    <path d="M 403 82 C 360 110, 370 130, 333 150 C 360 125, 380 110, 403 82 Z" fill="url(#jade-bright)"/>
+    <path d="M 448 153 C 398 168, 400 190, 353 198 C 390 185, 410 175, 448 153 Z" fill="url(#jade-bright)"/>
+    <path d="M 465 235 C 412 235, 410 260, 360 250 C 410 250, 412 225, 465 235 Z" fill="url(#jade-bright)"/>
+    <path d="M 448 317 C 398 302, 400 280, 353 272 C 390 285, 410 295, 448 317 Z" fill="url(#jade-bright)"/>
+    <path d="M 403 388 C 360 360, 370 340, 333 320 C 360 345, 380 360, 403 388 Z" fill="url(#jade-bright)"/>
+    <path d="M 333 438 C 305 400, 321 390, 298 357 C 318 390, 335 400, 333 438 Z" fill="url(#jade-bright)"/>
+    <path d="M 250 455 C 240 410, 260 410, 250 370 C 260 410, 240 410, 250 455 Z" fill="url(#jade-bright)"/>
+    <path d="M 167 438 C 195 400, 179 390, 202 357 C 182 390, 165 400, 167 438 Z" fill="url(#jade-bright)"/>
+    <path d="M 97 388 C 140 360, 130 340, 167 320 C 140 345, 120 360, 97 388 Z" fill="url(#jade-bright)"/>
+    <path d="M 52 317 C 102 302, 100 280, 147 272 C 110 285, 90 295, 52 317 Z" fill="url(#jade-bright)"/>
+    <path d="M 35 235 C 88 235, 90 260, 140 250 C 90 250, 88 225, 35 235 Z" fill="url(#jade-bright)"/>
+    <path d="M 52 153 C 102 168, 100 190, 147 198 C 110 185, 90 175, 52 153 Z" fill="url(#jade-bright)"/>
+    <path d="M 97 82 C 140 110, 130 130, 167 150 C 140 125, 120 110, 97 82 Z" fill="url(#jade-bright)"/>
+    <path d="M 167 32 C 195 70, 179 80, 202 113 C 182 80, 165 70, 167 32 Z" fill="url(#jade-bright)"/>
+  </g>
+
+  <!-- SHIELD BASE (CHIMAL) -->
+  <g filter="url(#shadow-maya)">
+    <circle cx="250" cy="250" r="175" fill="url(#obsidian-dark)" stroke="url(#maya-gold)" stroke-width="6"/>
+    <circle cx="250" cy="250" r="155" fill="none" stroke="url(#jade-bright)" stroke-width="4" stroke-dasharray="12 6"/>
+    <circle cx="250" cy="250" r="140" fill="url(#maya-gold)"/>
+  </g>
+
+  <!-- CENTRAL KIN (SUN/DAY) MAYAN GLYPH -->
+  <g transform="translate(250, 250)" filter="url(#shadow-maya)">
+    <!-- Outer Cartouche Ring -->
+    <rect x="-90" y="-90" width="180" height="180" rx="45" fill="url(#obsidian-dark)" stroke="url(#maya-gold)" stroke-width="5"/>
+    
+    <!-- Petals / Four Solar Rays (Kin Motif) -->
+    <path d="M -60 -60 C -20 -80, 20 -80, 60 -60 C 80 -20, 80 20, 60 60 C 20 80, -20 80, -60 60 C -80 20, -80 -20, -60 -60 Z" fill="url(#jade-bright)" stroke="url(#maya-gold)" stroke-width="3"/>
+    
+    <!-- Central Solar Eye / Circle -->
+    <circle cx="0" cy="0" r="35" fill="url(#maya-gold)" stroke="#000" stroke-width="2"/>
+    <circle cx="0" cy="0" r="18" fill="url(#obsidian-dark)"/>
+    <circle cx="0" cy="0" r="6" fill="#FFFFFF"/>
+
+    <!-- Corner Inset Dots (Glyphic Accents) -->
+    <circle cx="-42" cy="-42" r="8" fill="url(#maya-gold)"/>
+    <circle cx="42" cy="-42" r="8" fill="url(#maya-gold)"/>
+    <circle cx="42" cy="42" r="8" fill="url(#maya-gold)"/>
+    <circle cx="-42" cy="42" r="8" fill="url(#maya-gold)"/>
+  </g>
+
+  <!-- JADE BEADS ON RIM -->
+  <g fill="url(#jade-bright)" stroke="url(#maya-gold)" stroke-width="1.5">
+    <circle cx="250" cy="88" r="8"/>
+    <circle cx="412" cy="250" r="8"/>
+    <circle cx="250" cy="412" r="8"/>
+    <circle cx="88" cy="250" r="8"/>
+    <circle cx="135" cy="135" r="8"/>
+    <circle cx="365" cy="135" r="8"/>
+    <circle cx="365" cy="365" r="8"/>
+    <circle cx="135" cy="365" r="8"/>
+  </g>
+</svg>
