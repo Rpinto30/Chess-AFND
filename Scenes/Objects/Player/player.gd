@@ -9,13 +9,11 @@ enum states { WAITING, SELECT, VALIDMOVE, INVALIDMOVE, END}
 var actual_state = states.WAITING
 
 func load_data() -> void:
-	print(self.chessBoard.name)
 	board = utils.obtener_nodos_por_tipo(self.chessBoard, Board)[0]
 	board_points = utils.obtener_nodos_por_tipo(self.chessBoard, PointChess)[0]
 
 	if not board.touched.is_connected(self.cap_signal):
 		board.touched.connect(self.cap_signal)
-	print("todo cargado")
 	
 #===================SET ADDED POINTS=======================
 func clear_board_points():
@@ -50,19 +48,23 @@ func cap_signal(touched: bool, pos: Vector2i):
 	if touched:
 		selected_piece = Vector2i(-1,-1)
 		clear_board_points()
-		debug_clear_points_danger()
+		#debug_clear_points_danger()
 		if pos.x != -1 and pos.y != -1:
 			var piece = board.matrixRef[pos.y][pos.x]
 			selected_piece = pos
 			if is_instance_of(piece, Piece):
 				if piece.color == type_color_player:
+					var p = []
 					if not self.in_jaque:
-						var p = piece.get_my_valid_moves(pos, board, self)
-						debug_set_points_danger()
+						p = piece.get_my_valid_moves(pos, board, self)
+						#debug_set_points_danger()
 						set_board_points(pos, p)
 					else:
-						var p = self.valid_moves_jaque(board,piece)
+						p = self.valid_moves_jaque(board,piece)
 						set_board_points(pos, p, Vector2i(2,2))
+						#if p: self.in_jaque = self.states_game.NORMAL
+						self.already_jaquemate_validated = false
+					
 				#endOwnPiece
 			#endIsInstance
 		#endValidPos
@@ -79,13 +81,11 @@ func cap_select(touched: bool, pos: Vector2i):
 	if touched:
 		#clear_board_points()
 		if added_points.has(pos):
-			#print(pos, ": Puede moverse")
 			actual_state = states.VALIDMOVE
 			move_piece(board, pos)
 			actual_state = states.END
-			debug_clear_points_danger()
+			#debug_clear_points_danger()
 		else:
-			print("MOVIMIENTO NO VALIDO ----------")
 			actual_state = states.INVALIDMOVE
 			restore()
 			cap_signal(touched, pos)
@@ -98,10 +98,11 @@ func restore():
 
 func main():
 	if board == null:
-		print("Esperando a que el tablero esté listo...")
 		return 
 	match actual_state:
 		states.WAITING:
+			if not self.already_jaquemate_validated:
+				self.valid_jaquemate(board)
 			if not board.touched.is_connected(self.cap_signal):
 				board.touched.connect(self.cap_signal)
 		states.SELECT:

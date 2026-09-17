@@ -16,7 +16,7 @@ enum turns {P1, P2}
 @export var turn = turns.P1
 var players: Array[ChessPlayer]
 var stylePieces: int = 0
-
+var won: bool
 #=======================LOAD =============================
 
 func default_data(mode: String, color: int, style:int): # 1v1 | bot; 0: white | 1: black
@@ -134,6 +134,8 @@ func manager_turns():
 	var player = select_player_by_turn()
 	label.text = "Turno de: " + player.player_name
 	player.main()
+	
+	#CAMBIO DE TURNO
 	if player.actual_state == player.states.END:
 		if turn == turns.P1:  turn = turns.P2
 		else: turn = turns.P1
@@ -146,7 +148,6 @@ func manager_turns():
 		player.restore()
 		
 		
-
 """
 estados especiales:
 - jaquemate (sin movimientos disponibles)
@@ -154,13 +155,27 @@ estados especiales:
 
 - tablas (rey/rey - movimientos repetidos)
 """
-func process_jaquemate() -> bool:
-	return true
+func process_jaquemate():
+	var player = select_player_by_turn()
+	if player.in_jaquemate:
+		print("EL GANADOR ES: ", select_other_by_turn().player_name)
+		won = true
+	elif select_other_by_turn().in_jaquemate:
+		print("EL GANADOR ES: ", player.player_name)
+		won = true
 
 func process_draw() -> bool:
-	return true
+	var only_kings = true
+	for p in players:
+		if len(p.my_pieces) == 1:
+			if p.my_pieces[0].select_type != 5: #king
+				only_kings = false
+		else: only_kings = false
+		
+	return only_kings
 
 func _process(_delta: float) -> void:
-	manager_turns()
-	#process_jaque()
+	if not won:
+		manager_turns()
+	process_jaquemate()
 	

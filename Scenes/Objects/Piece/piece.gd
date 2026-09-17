@@ -30,9 +30,7 @@ var is_first_move: bool = true
 var is_in_other_edge: bool = false
 
 static func filt_jaque_pos(player: ChessPlayer, pos: Vector2i, piece):
-	print("EN JAQUE===========================")
 	if piece.select_type == 5: #king
-		print("REY")
 		if pos in player.danger_points: return false
 		else: return true
 	else:
@@ -57,38 +55,42 @@ func eat_piece(player: ChessPlayer):
 	player.points += 1
 	player.get_parent().remove_child(self)
 	
-	#print("Piezas comidas por: ", self.name)
 	if self.player_owner.my_pieces.has(self):
 		self.player_owner.my_pieces.erase(self)
-	#print(self.player_owner.my_pieces)
 
-func get_possible_moves(player:ChessPlayer, pos: Vector2i, board:Board, movements: Array):
+func get_possible_moves(player:ChessPlayer, pos: Vector2i, board:Board, movements: Array, own_piece= false):
 	var valids = []
-	print("Movements: ",movements)
 	for comb in movements:
-		print(comb)
 		var r = utils.check_operation_vec_player(player.ID_PLAYER, pos, comb)
 		#var r = pos-comb if player.ID_PLAYER == 1 else pos+comb
-		var condition = (Piece.filt_pos_limits(r, board) and 
-		Piece.filt_pos_own(r, board, player))
+		var condition = false
+		if own_piece:
+			condition = Piece.filt_pos_limits(r, board)
+		else:
+			condition = (Piece.filt_pos_limits(r, board) and 
+						Piece.filt_pos_own(r, board, player)) 
+						
 		if condition:
 			valids.append(r)
 	return valids
 
-func get_my_valid_moves(pos: Vector2i, board: Board, player: Player):
+func get_my_valid_moves(pos: Vector2i, board: Board, player: Player, 
+	limits = true, own_piece = false, only_attack = false):
 	match select_type:
 		Type.Pawn:
-			return ValidMoves.mov_peon(board, player, pos, self.is_first_move)
+			return ValidMoves.mov_peon(board, player, pos, self.is_first_move, own_piece, only_attack)
 		Type.Knightm:
-			return ValidMoves.mov_caballo(board, pos, player)
+			return ValidMoves.mov_caballo(board, pos, player, own_piece)
 		Type.Bishop:
-			return ValidMoves.mov_alfil(board, pos, player)
+			return ValidMoves.mov_alfil(board, pos, player, limits, own_piece)
 		Type.Rook:
-			return ValidMoves.mov_torre(board, pos, player)
+			return ValidMoves.mov_torre(board, pos, player, limits, own_piece)
 		Type.Queen:
-			return ValidMoves.mov_reina(board, pos, player)
+			return ValidMoves.mov_reina(board, pos, player, limits, own_piece)
 		Type.King:
-			return ValidMoves.mov_rey(board, pos, player)
+			var r =  ValidMoves.mov_rey(board, pos, player, own_piece)
+			r.append_array(ValidMoves.cast_ling(board, pos, player, self.is_first_move))
+			return r
 
 #func Pawn_valid_move():
 #	return [
