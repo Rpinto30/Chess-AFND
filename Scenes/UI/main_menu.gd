@@ -1,3 +1,4 @@
+#CAMBIADO
 extends Control
 """
 Claude me avisó de cómo conectar scenes entre ellas, pero hay una cosa que te dejo aquí y es 
@@ -38,6 +39,7 @@ const COLOR_OVERLAY     := Color(0.04, 0.02, 0.0, 0.82)
 #  ESTADO
 # ─────────────────────────────────────────────
 var nombre_usuario   := "Jugador"
+var nombre_usuario2   := "Jugador 2"
 var dificultad_bot   := 1          # 0 Fácil · 1 Medio · 2 Difícil
 var piezas_estilo_maya := true     # true = piezas Maya · false = piezas clásicas
 var modo_seleccionado := "bot"     # "bot" | "1v1"
@@ -48,6 +50,7 @@ var tiempo_segundos   := 600
 # refs
 var fondo: TextureRect
 var input_nombre: LineEdit
+var input_nombre2: LineEdit
 var switch_piezas: Button
 var pills_dificultad: Array[Button] = []
 var pills_modo: Array[Button] = []
@@ -60,6 +63,8 @@ var overlay_jugar: Control
 var panel_paso1: Control
 var panel_paso2: Control
 
+@export var logo : Texture2D
+
 # ─────────────────────────────────────────────
 #  ENTRADA PRINCIPAL
 # ─────────────────────────────────────────────
@@ -67,11 +72,18 @@ func _ready() -> void:
 	anchor_right  = 1.0
 	anchor_bottom = 1.0
 
+	var data = FILEDATA.load_game()
+	if data:
+		nombre_usuario = data['player1_name']
+		nombre_usuario2 = data['player2_name']
+		piezas_estilo_maya = data["piezas_estilo_maya"]
+	
 	_crear_fondo()
 	_crear_contenido_principal()
 	_crear_popup_opciones()
 	_crear_popup_jugar()
-
+	
+	utils.reveal_scene()
 # ─────────────────────────────────────────────
 #  FONDO (dejar espacio para imagen)
 # ─────────────────────────────────────────────
@@ -106,11 +118,14 @@ func _estilo_panel(radio: int = 18, color_fondo: Color = COLOR_FONDO_PANEL,
 	s.set_content_margin_all(0)
 	return s
 
-func _estilo_transparente(radio: int = 18, color_borde: Color = COLOR_BORDE_PANEL,
+func _estilo_transparente(radio: int = 20, color_borde: Color = COLOR_BORDE_PANEL,
 		grosor: int = 1) -> StyleBoxFlat:
-	return _estilo_panel(radio, Color(0, 0, 0, 0), color_borde, grosor)
-
-func _label(texto: String, size: int = 13, color: Color = COLOR_TEXTO) -> Label:
+	var estilo := _estilo_panel(radio, Color(0, 0, 0, 0), color_borde, grosor)
+	estilo.content_margin_left = 16  # <--- Padding a la izquierda
+	estilo.content_margin_right = 16 # <--- Opcional: padding a la derecha también
+	return estilo
+	
+func _label(texto: String, size: int = 16, color: Color = COLOR_TEXTO) -> Label:
 	var l := Label.new()
 	l.text = texto
 	l.add_theme_font_size_override("font_size", size)
@@ -121,7 +136,7 @@ func _label(texto: String, size: int = 13, color: Color = COLOR_TEXTO) -> Label:
 	return l
 
 func _boton_pill(texto: String, color_borde: Color = COLOR_BORDE_PANEL,
-		color_texto: Color = COLOR_TEXTO_MUTED, tam_fuente: int = 12) -> Button:
+		color_texto: Color = COLOR_TEXTO_MUTED, tam_fuente: int = 16) -> Button:
 	var b := Button.new()
 	b.text = texto
 	b.clip_contents = false
@@ -144,7 +159,7 @@ func _boton_menu(texto: String, color_borde: Color = COLOR_DORADO) -> Button:
 	b.text = texto
 	b.custom_minimum_size = Vector2(240, 0)
 	b.add_theme_color_override("font_color", COLOR_TEXTO)
-	b.add_theme_font_size_override("font_size", 16)
+	b.add_theme_font_size_override("font_size", 18)
 	var normal := _estilo_panel(16, COLOR_FONDO_PANEL, color_borde, 2)
 	normal.content_margin_top    = 16
 	normal.content_margin_bottom = 16
@@ -189,7 +204,6 @@ func _crear_contenido_principal() -> void:
 	vbox.add_theme_constant_override("separation", 28)
 	centro.add_child(vbox)
 
-	# Bloque de título tipo "estela"
 	var panel_titulo := PanelContainer.new()
 	panel_titulo.add_theme_stylebox_override("panel", _estilo_panel(20, COLOR_FONDO_PANEL, COLOR_DORADO, 2))
 	var margin_t := MarginContainer.new()
@@ -198,19 +212,20 @@ func _crear_contenido_principal() -> void:
 	margin_t.add_theme_constant_override("margin_top",    20)
 	margin_t.add_theme_constant_override("margin_bottom", 20)
 	panel_titulo.add_child(margin_t)
-
-	var vbox_t := VBoxContainer.new()
-	vbox_t.add_theme_constant_override("separation", 4)
-	margin_t.add_child(vbox_t)
-
-	var titulo := _label("KAB'AWIL CHESS", 26, COLOR_DORADO)
-	titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox_t.add_child(titulo)
-
-	var subtitulo := _label("✧ La Invasión hacia América en un tablero ✧", 12, COLOR_TEXTO_MUTED)
-	subtitulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox_t.add_child(subtitulo)
-
+	
+	var img_ui = TextureRect.new()
+	img_ui.texture = logo
+	
+	img_ui.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	img_ui.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	
+	# Cambiar el tamaño y posición por código
+	img_ui.custom_minimum_size = Vector2(600, 300)
+	img_ui.position = Vector2(100, 50)
+	
+	# Añadir el nodo a la interfaz
+	margin_t.add_child(img_ui)
+	
 	vbox.add_child(panel_titulo)
 
 	# Botones principales
@@ -220,11 +235,13 @@ func _crear_contenido_principal() -> void:
 	vbox.add_child(vbox_botones)
 
 	var btn_jugar := _boton_menu("⚔  Jugar", COLOR_MAYA)
+	btn_jugar.add_theme_font_size_override("font_size", 20)
 	btn_jugar.pressed.connect(_on_abrir_jugar)
 	vbox_botones.add_child(btn_jugar)
 
 	var btn_opciones := _boton_menu("⚙  Opciones", COLOR_BORDE_PANEL)
 	btn_opciones.pressed.connect(_on_abrir_opciones)
+	btn_opciones.add_theme_font_size_override("font_size", 20)
 	vbox_botones.add_child(btn_opciones)
 
 # ─────────────────────────────────────────────
@@ -283,26 +300,37 @@ func _crear_popup_opciones() -> void:
 	vbox.add_theme_constant_override("separation", 14)
 	margin.add_child(vbox)
 
-	vbox.add_child(_label("Configuración", 16, COLOR_DORADO))
+	vbox.add_child(_label("Configuración", 18, COLOR_DORADO))
 	vbox.add_child(_separador_horizontal())
 
-	vbox.add_child(_label("Nombre de usuario", 11, COLOR_TEXTO_MUTED))
+	vbox.add_child(_label("Nombre de usuario", 16, COLOR_TEXTO_MUTED))
 	input_nombre = LineEdit.new()
 	input_nombre.text = nombre_usuario
-	input_nombre.placeholder_text = "Escribe tu nombre..."
+	input_nombre.placeholder_text = "   Escribe nombre del jugador 1..."
+	input_nombre.add_theme_font_size_override("font_size", 16)
 	input_nombre.add_theme_stylebox_override("normal", _estilo_transparente(12, COLOR_BORDE_PANEL, 1))
 	input_nombre.add_theme_stylebox_override("focus",  _estilo_transparente(12, COLOR_DORADO, 1))
 	input_nombre.add_theme_color_override("font_color", COLOR_TEXTO)
+	
 	vbox.add_child(input_nombre)
+	
+	input_nombre2 = LineEdit.new()
+	input_nombre2.text = nombre_usuario2
+	input_nombre2.placeholder_text = "   Escribe nombre del jugador 2..."
+	input_nombre2.add_theme_font_size_override("font_size", 16)
+	input_nombre2.add_theme_stylebox_override("normal", _estilo_transparente(12, COLOR_BORDE_PANEL, 1))
+	input_nombre2.add_theme_stylebox_override("focus",  _estilo_transparente(12, COLOR_DORADO, 1))
+	input_nombre2.add_theme_color_override("font_color", COLOR_TEXTO)
+	vbox.add_child(input_nombre2)
 
-	vbox.add_child(_label("Dificultad del Bot", 11, COLOR_TEXTO_MUTED))
+	vbox.add_child(_label("Dificultad del Bot", 16, COLOR_TEXTO_MUTED))
 	var hbox_dif := HBoxContainer.new()
 	hbox_dif.add_theme_constant_override("separation", 8)
 	vbox.add_child(hbox_dif)
 
 	pills_dificultad.clear()
 	for etiqueta in ["Fácil", "Medio", "Difícil"]:
-		var b := _boton_pill(etiqueta)
+		var b := _boton_pill(etiqueta, COLOR_BORDE_PANEL, COLOR_TEXTO_MUTED, 16)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var idx := pills_dificultad.size()
 		b.pressed.connect(func(): dificultad_bot = idx; _actualizar_seleccion(pills_dificultad, idx))
@@ -312,7 +340,7 @@ func _crear_popup_opciones() -> void:
 
 	vbox.add_child(_separador_horizontal())
 
-	vbox.add_child(_label("Estilo de piezas", 11, COLOR_TEXTO_MUTED))
+	vbox.add_child(_label("Estilo de piezas", 16, COLOR_TEXTO_MUTED))
 	switch_piezas = _crear_switch_piezas()
 	vbox.add_child(switch_piezas)
 
@@ -322,12 +350,12 @@ func _crear_popup_opciones() -> void:
 	hbox_botones.add_theme_constant_override("separation", 10)
 	vbox.add_child(hbox_botones)
 
-	var btn_cancelar := _boton_pill("Cancelar")
+	var btn_cancelar := _boton_pill("Cancelar", COLOR_BORDE_PANEL, COLOR_TEXTO_MUTED, 16)
 	btn_cancelar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btn_cancelar.pressed.connect(func(): _cerrar(overlay_opciones))
 	hbox_botones.add_child(btn_cancelar)
 
-	var btn_guardar := _boton_pill("Guardar", COLOR_MAYA, COLOR_MAYA)
+	var btn_guardar := _boton_pill("Guardar", COLOR_MAYA, COLOR_MAYA, 16)
 	btn_guardar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btn_guardar.pressed.connect(_on_guardar_opciones)
 	hbox_botones.add_child(btn_guardar)
@@ -341,9 +369,20 @@ func _on_abrir_opciones() -> void:
 
 func _on_guardar_opciones() -> void:
 	nombre_usuario = input_nombre.text.strip_edges()
+	nombre_usuario2 = input_nombre2.text.strip_edges()
 	if nombre_usuario == "":
-		nombre_usuario = "Jugador"
+		nombre_usuario = " Jugador"
+	
+	if nombre_usuario2 == "":
+		nombre_usuario2 = " Jugador2"	
+	
 	configuracion_actualizada.emit(nombre_usuario, dificultad_bot, piezas_estilo_maya)
+	var data = {
+		"player1_name": nombre_usuario,
+		"player2_name": nombre_usuario2,
+		"piezas_estilo_maya": piezas_estilo_maya,
+	}
+	FILEDATA.save_game(data)
 	_cerrar(overlay_opciones)
 
 # Switch de dos estados (Piezas Mayas / Piezas Clásicas)
@@ -353,7 +392,7 @@ func _crear_switch_piezas() -> Button:
 	b.button_pressed = piezas_estilo_maya
 	b.clip_contents = false
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b.add_theme_font_size_override("font_size", 13)
+	b.add_theme_font_size_override("font_size", 16)
 	b.toggled.connect(func(activado: bool):
 		piezas_estilo_maya = activado
 		_actualizar_estilo_switch(b)
@@ -411,9 +450,9 @@ func _crear_paso1_jugar() -> VBoxContainer:
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 14)
 
-	vbox.add_child(_label("Nueva Partida", 16, COLOR_DORADO))
+	vbox.add_child(_label("Nueva Partida", 18, COLOR_DORADO))
 	vbox.add_child(_separador_horizontal())
-	vbox.add_child(_label("¿Cómo quieres jugar?", 11, COLOR_TEXTO_MUTED))
+	vbox.add_child(_label("¿Cómo quieres jugar?", 16, COLOR_TEXTO_MUTED))
 
 	var btn_1v1 := _boton_menu("👥  1 vs 1 (local)", COLOR_BORDE_PANEL)
 	btn_1v1.pressed.connect(func(): modo_seleccionado = "1v1"; _ir_a_paso2())
@@ -423,7 +462,7 @@ func _crear_paso1_jugar() -> VBoxContainer:
 	btn_bot.pressed.connect(func(): modo_seleccionado = "bot"; _ir_a_paso2())
 	vbox.add_child(btn_bot)
 
-	var btn_cerrar := _boton_pill("Cancelar")
+	var btn_cerrar := _boton_pill("Cancelar", COLOR_BORDE_PANEL, COLOR_TEXTO_MUTED, 16)
 	btn_cerrar.pressed.connect(func(): _cerrar(overlay_jugar))
 	vbox.add_child(btn_cerrar)
 
@@ -434,24 +473,24 @@ func _crear_paso2_jugar() -> VBoxContainer:
 	vbox.add_theme_constant_override("separation", 14)
 
 	var hbox_top := HBoxContainer.new()
-	var btn_atras := _boton_pill("← Atrás")
+	var btn_atras := _boton_pill("← Atrás", COLOR_BORDE_PANEL, COLOR_TEXTO_MUTED, 16)
 	btn_atras.pressed.connect(_ir_a_paso1)
 	hbox_top.add_child(btn_atras)
 	vbox.add_child(hbox_top)
 
-	vbox.add_child(_label("Elige tu bando", 11, COLOR_TEXTO_MUTED))
+	vbox.add_child(_label("Elige tu bando", 16, COLOR_TEXTO_MUTED))
 	var hbox_bando := HBoxContainer.new()
 	hbox_bando.add_theme_constant_override("separation", 10)
 	vbox.add_child(hbox_bando)
 
 	pills_bando.clear()
-	var btn_maya := _boton_pill("● Mayas", COLOR_MAYA, COLOR_MAYA, 13)
+	var btn_maya := _boton_pill("● Mayas\nBlancas", COLOR_MAYA, COLOR_MAYA, 16)
 	btn_maya.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btn_maya.pressed.connect(func(): bando_maya = false; _actualizar_seleccion(pills_bando, 0, COLOR_MAYA))
 	hbox_bando.add_child(btn_maya)
 	pills_bando.append(btn_maya)
 
-	var btn_spain := _boton_pill("● Reino de España", COLOR_SPAIN, COLOR_SPAIN, 13)
+	var btn_spain := _boton_pill("● Reino de España\nNegras", COLOR_SPAIN, COLOR_SPAIN, 16)
 	btn_spain.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btn_spain.pressed.connect(func(): bando_maya = true; _actualizar_seleccion(pills_bando, 1, COLOR_SPAIN))
 	hbox_bando.add_child(btn_spain)
@@ -459,7 +498,7 @@ func _crear_paso2_jugar() -> VBoxContainer:
 
 	vbox.add_child(_separador_horizontal())
 
-	vbox.add_child(_label("Tiempo de partida", 11, COLOR_TEXTO_MUTED))
+	vbox.add_child(_label("Tiempo de partida", 16, COLOR_TEXTO_MUTED))
 	var grid_tiempo := GridContainer.new()
 	grid_tiempo.columns = 3
 	grid_tiempo.add_theme_constant_override("h_separation", 8)
@@ -469,7 +508,7 @@ func _crear_paso2_jugar() -> VBoxContainer:
 	pills_tiempo.clear()
 	var opciones_tiempo := [3, 5, 10, 15, 30, 60]
 	for minutos in opciones_tiempo:
-		var b := _boton_pill("%d min" % minutos)
+		var b := _boton_pill("%d min" % minutos, COLOR_BORDE_PANEL, COLOR_TEXTO_MUTED, 16)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var idx := pills_tiempo.size()
 		b.pressed.connect(func(): minutos_partida = minutos; _actualizar_seleccion(pills_tiempo, idx))
@@ -519,7 +558,7 @@ func save_info() -> void:
 		GlobalManager.bot_difficulty = dificultad_bot  # 0 Fácil · 1 Medio · 2 Difícil
 	else:
 		GlobalManager.mode = "1vs1" 
-		GlobalManager.player2_name = "Player 2"
+		GlobalManager.player2_name = nombre_usuario2
 		GlobalManager.player1_name = nombre_usuario
 		GlobalManager.bot_difficulty = -1
 		

@@ -11,6 +11,7 @@ signal piece_style_changed(style: String)
 @export var pause_menu: PopupPanel #= %PauseMenu
 @export var settings_popup: PopupPanel #= %SettingsPopup
 @export var afnd_table: PopupPanel 
+@export var won_menu: PopupPanel 
 
 @export var show_afnd_button: Button 
 @onready var player1_name_label: Label = %Player1NameLabel
@@ -48,6 +49,12 @@ func _on_exit_to_main_menu_requested() -> void:
 func _on_piece_style_saved(style: String) -> void:
 	piece_style_changed.emit(style)
 
+func on_won() -> void:
+	won_menu.popup_centered()
+
+func set_text_won_menu(text: String):
+	var t = utils.obtener_nodos_por_nombre(won_menu, 'LabelWon')[0]
+	t.text = text
 
 func _on_show_afnd_pressed() -> void:
 	afnd_table.show()

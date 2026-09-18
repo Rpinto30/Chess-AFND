@@ -28,3 +28,4 @@ func _on_settings_pressed() -> void:
 
 func _on_exit_pressed() -> void:
 	exit_to_main_menu_requested.emit()
+	utils.transition_scene('Scenes/UI/main_menu.tscn')

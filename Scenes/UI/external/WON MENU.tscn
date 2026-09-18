@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://ckoarf2udciy3"]
+
+[ext_resource type="Script" uid="uid://c2pi5860rwwov" path="res://Scenes/UI/external/won_menu.gd" id="1_ce8q4"]
+
+[node name="PopupPanel" type="PopupPanel" unique_id=1647063911 node_paths=PackedStringArray("exit_button")]
+oversampling_override = 1.0
+size = Vector2i(714, 188)
+visible = true
+script = ExtResource("1_ce8q4")
+exit_button = NodePath("Margin/VBox/ButtonsRow/SaveButton")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=116391352]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="Margin" unique_id=1610627251]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="LabelWon" type="Label" parent="Margin/VBox" unique_id=917169413]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 31
+text = "EL JUGADOR ... HA GANADO!!"
+
+[node name="HSeparator" type="HSeparator" parent="Margin/VBox" unique_id=1958947564]
+layout_mode = 2
+
+[node name="ButtonsRow" type="HBoxContainer" parent="Margin/VBox" unique_id=1789529780]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 12
+alignment = 2
+
+[node name="SaveButton" type="Button" parent="Margin/VBox/ButtonsRow" unique_id=751186622]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 30
+text = "SALIR"

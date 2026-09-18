@@ -107,8 +107,10 @@ func _ready() -> void:
 	#===============================================
 	board = utils.obtener_nodos_por_tipo(board_parent, Board)[0]
 	
-	
-	default_data('bot', 0, 0)
+	load_global_data()
+	lp1_name.text = GlobalManager.player1_name
+	lp2_name.text = GlobalManager.player2_name
+	#default_data('bot', 0, 0)
 	for i in players:
 		set_pieces(i, i.ID_PLAYER)
 		
@@ -226,10 +228,22 @@ estados especiales:
 """
 func process_jaquemate():
 	var player = select_player_by_turn()
+	
+	var there_king = false
+	for p in player.my_pieces:
+		if p.select_type == 5:
+			there_king = true
+	
+	if not there_king: player.in_jaquemate = true
+	
 	if player.in_jaquemate:
+		MainUI.on_won()
+		MainUI.set_text_won_menu("EL GANADOR ES: " + select_other_by_turn().player_name)
 		print("EL GANADOR ES: ", select_other_by_turn().player_name)
 		won = true
 	elif select_other_by_turn().in_jaquemate:
+		MainUI.on_won()
+		MainUI.set_text_won_menu("EL GANADOR ES: " + player.player_name)
 		print("EL GANADOR ES: ", player.player_name)
 		won = true
 

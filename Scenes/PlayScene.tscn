@@ -21,7 +21,7 @@ scale = Vector2(1.2774414, 1.2774414)
 texture = ExtResource("2_353r0")
 
 [node name="Chess" parent="." unique_id=820938813 instance=ExtResource("1_6x5ix")]
-position = Vector2(-84, 108)
+position = Vector2(-89, 237.99998)
 scale = Vector2(3.895, 3.895)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=790168747]

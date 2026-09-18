@@ -6,8 +6,9 @@
 [ext_resource type="PackedScene" uid="uid://dloc40iqjcni1" path="res://Scenes/UI/external/new_pause_menu.tscn" id="2_hs2y3"]
 [ext_resource type="PackedScene" uid="uid://cisj0jyaygedh" path="res://Scenes/UI/external/new_settings_popup.tscn" id="3_86ra1"]
 [ext_resource type="PackedScene" uid="uid://qyoafphh05fl" path="res://Scenes/UI/external/AFND_TABLE/afnd_table.tscn" id="4_86ra1"]
+[ext_resource type="PackedScene" uid="uid://ckoarf2udciy3" path="res://Scenes/UI/external/WON MENU.tscn" id="7_77qsp"]
 
-[node name="MainUI" type="Control" unique_id=2077753106 node_paths=PackedStringArray("pause_menu", "settings_popup", "afnd_table", "show_afnd_button")]
+[node name="MainUI" type="Control" unique_id=2077753106 node_paths=PackedStringArray("pause_menu", "settings_popup", "afnd_table", "won_menu", "show_afnd_button")]
 propagate_maximum_size = true
 layout_mode = 3
 anchors_preset = 15
@@ -19,6 +20,7 @@ script = ExtResource("1_rufpd")
 pause_menu = NodePath("PauseMenu")
 settings_popup = NodePath("SettingsPopup")
 afnd_table = NodePath("AfndTable")
+won_menu = NodePath("winMenu")
 show_afnd_button = NodePath("Margin/Layout/TopBar/TopBarH/HBoxContainerTABLE/ButtonAFND")
 
 [node name="Background" type="ColorRect" parent="." unique_id=453603505]
@@ -113,7 +115,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 25
-text = "10:00:00"
+text = "-"
 
 [node name="Player1ScoreRow" type="HBoxContainer" parent="Margin/Layout/PlayersRow/Player1Panel/Player1VBox" unique_id=1491869245]
 layout_mode = 2
@@ -157,7 +159,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 25
-text = "10:00:00"
+text = "-"
 
 [node name="Player2ScoreRow" type="HBoxContainer" parent="Margin/Layout/PlayersRow/Player2Panel/Player2VBox" unique_id=772044389]
 layout_mode = 2
@@ -189,5 +191,9 @@ visible = false
 
 [node name="AfndTable" parent="." unique_id=745047864 instance=ExtResource("4_86ra1")]
 size = Vector2i(717, 320)
+visible = false
 min_size = Vector2i(650, 320)
 max_size = Vector2i(16368, 16384)
+
+[node name="winMenu" parent="." unique_id=1647063911 instance=ExtResource("7_77qsp")]
+visible = false

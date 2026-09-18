@@ -277,6 +277,7 @@ func valid_moves_jaque(board: Board, piece: Piece):
 var already_jaquemate_validated = true
 func valid_jaquemate(board:Board):
 	already_jaquemate_validated = true
+
 	if temp_other_player_reference != null:
 		if len(self.my_pieces) > 1:
 			var dup = self.my_pieces.duplicate()

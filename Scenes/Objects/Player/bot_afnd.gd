@@ -47,7 +47,7 @@ func load_data():
 	board_points_extra = utils.obtener_nodos_por_tipo(self.chessBoard, PointExtraChess)[0]
 	mainUI = utils.obtener_nodos_por_tipo(self.get_parent(), PRINCIPALMENU)[0]
 	
-	afnd = AFND.new(mainUI)
+	afnd = AFND.new(mainUI, board, self)
 	print("[BOT] todo cargado")
 
 func restore():
@@ -137,7 +137,13 @@ func generador_movimientos(id_actual) -> Array:
 			var peso = ponderar_movimiento(pieza, destino, emocion_actual)
 
 			mapa_movimientos[clave] = {"pieza": pieza, "destino": destino}
-			resultado.append({"clave": clave, "destino_id": destino_id, "peso": peso})
+			resultado.append({
+	"clave": clave,
+	"destino_id": destino_id,
+	"peso": peso,
+	"pieza": pieza,          # <-- ¿está esta línea?
+	"destino_pos": destino   # <-- ¿está esta línea?
+})
 	return resultado
 
 # --- Ponderación externa al AFND (tuya) ---
@@ -146,21 +152,19 @@ func generador_movimientos(id_actual) -> Array:
 func ponderar_movimiento(pieza: Piece, destino: Vector2i, emocion) -> float:
 	match emocion:
 		personalidades.ATACAR:
-			#print("Atacando")
-			return valor_pieza_en(destino) * 5.0 + 1.0
+			return valor_pieza_en(destino) * 5.0 + 1.0 + penalizacion_peligro(destino, pieza)
 		personalidades.DEFENDER:
-			#print("Defendiendo")
-			# prioriza mover piezas de menor valor, mantenerse "atrás"
-			return 10.0 - VALORES_PIEZA.get(pieza.select_type, 0.0)
+			return 10.0 - VALORES_PIEZA.get(pieza.select_type, 0.0) + penalizacion_peligro(destino, pieza)
 		personalidades.BLOQUEAR:
-			#print("Bloqueando")
-			return valor_pieza_en(destino) + 1.0
+			return valor_pieza_en(destino) + 1.0 + penalizacion_peligro(destino, pieza)
 		personalidades.RETIRAR:
-			#print("Retirando")
 			var dist_rey = abs(destino.y - my_king.actual_pos.y) + abs(destino.x - my_king.actual_pos.x)
 			return -float(dist_rey)
 		_: # MOVIMIENTO
-			return valor_pieza_en(destino) + 1.0
+			return (valor_pieza_en(destino) + 1.0 
+				+ bonus_centralidad(destino) 
+				+ bonus_desarrollo(pieza) 
+				+ penalizacion_peligro(destino, pieza))
 
 func main():
 	match actual_state:
@@ -176,7 +180,9 @@ func main():
 			pass#actual_state = states.THINKING
 			#restore() -> lo llama GameManager al cambiar de turno
 
+var moves_str = ''
 func pensar() -> void:
+	moves_str = ''
 	print("=====================================")
 	#for i in self.danger_points:
 	#	board_points.set_point(i, Vector2i(2,1))
@@ -188,7 +194,8 @@ func pensar() -> void:
 		afnd.set_first_move(ID_RAIZ, 10, generador_movimientos)
 	else:
 		afnd.construir_recursivo(ID_RAIZ, null, 10, generador_movimientos)
-
+	mainUI.set_afnd_current_string(moves_str)
+	
 func ejecutar_mejor_jugada() -> void:
 	var mejor_clave = afnd.elegir_mejor_camino()
 	if mejor_clave == null:
@@ -203,6 +210,80 @@ func ejecutar_mejor_jugada() -> void:
 	#await get_tree().create_timer(5, false).timeout
 	print("[BOT] Mejor clave: ", mejor_clave)
 	selected_piece = info["pieza"].actual_pos
-	await get_tree().create_timer(rng_block.randf_range(1.5,5.8)).timeout
+	await get_tree().create_timer(rng_block.randf_range(0.5,4.3)).timeout
 	move_piece(board, info["destino"])
 	actual_state = states.END
+	
+
+func _simular_movimiento(pieza: Piece, destino: Vector2i) -> Dictionary:
+	var origen = pieza.actual_pos
+	var id_owner = board.matrixPos[origen.y][origen.x]
+
+	var pieza_capturada = null
+	var capturada_en_my_pieces = false
+	var target = board.matrixRef[destino.y][destino.x]
+	if is_instance_of(target, Piece):
+		pieza_capturada = target
+		if pieza_capturada in self.my_pieces:
+			capturada_en_my_pieces = true
+			self.my_pieces.erase(pieza_capturada)
+
+	board.matrixRef[destino.y][destino.x] = pieza
+	board.matrixRef[origen.y][origen.x] = ""
+	board.matrixPos[destino.y][destino.x] = id_owner
+	board.matrixPos[origen.y][origen.x] = 0
+
+	pieza.actual_pos = destino
+
+	return {
+		"pieza": pieza,
+		"origen": origen,
+		"destino": destino,
+		"id_owner": id_owner,
+		"capturada": pieza_capturada,
+		"capturada_en_my_pieces": capturada_en_my_pieces
+	}
+
+
+func _deshacer_movimiento(snap: Dictionary) -> void:
+	var pieza = snap["pieza"]
+	var origen = snap["origen"]
+	var destino = snap["destino"]
+
+	board.matrixRef[origen.y][origen.x] = pieza
+	board.matrixPos[origen.y][origen.x] = snap["id_owner"]
+	pieza.actual_pos = origen
+
+	if snap["capturada"] != null:
+		board.matrixRef[destino.y][destino.x] = snap["capturada"]
+		board.matrixPos[destino.y][destino.x] = snap["capturada"].player_owner.ID_PLAYER
+		if snap["capturada_en_my_pieces"]:
+			self.my_pieces.append(snap["capturada"])
+	else:
+		board.matrixRef[destino.y][destino.x] = ""
+		board.matrixPos[destino.y][destino.x] = 0
+
+
+
+const CENTRO = [Vector2i(3,3), Vector2i(3,4), Vector2i(4,3), Vector2i(4,4)]
+
+func bonus_centralidad(pos: Vector2i) -> float:
+	var dist_min = 99
+	for c in CENTRO:
+		var d = abs(pos.x - c.x) + abs(pos.y - c.y)
+		if d < dist_min:
+			dist_min = d
+	# entre más cerca del centro, más puntos (máximo ~0.6, mínimo 0)
+	return max(0.0, 0.6 - dist_min * 0.1)
+
+func bonus_desarrollo(pieza: Piece) -> float:
+	# premia sacar piezas menores que no se han movido (desarrollo de apertura)
+	if pieza.is_first_move and pieza.select_type in [Piece.Type.Knightm, Piece.Type.Bishop]:
+		return 0.4
+	return 0.0
+
+func penalizacion_peligro(destino: Vector2i, pieza: Piece) -> float:
+	# evita mandar la pieza a una casilla atacada, salvo que sea un buen cambio
+	if destino in self.danger_points:
+		return -VALORES_PIEZA.get(pieza.select_type, 0.0) * 0.5
+	return 0.0

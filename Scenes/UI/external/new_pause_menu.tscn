@@ -4,7 +4,7 @@
 
 [node name="NewPauseMenu" type="PopupPanel" unique_id=1429511493]
 oversampling_override = 1.0
-size = Vector2i(221, 205)
+size = Vector2i(512, 377)
 visible = true
 script = ExtResource("1_o2a2j")
 
@@ -29,7 +29,7 @@ theme_override_constants/separation = 10
 
 [node name="TitleLabel" type="Label" parent="Margin/VBox" unique_id=549422503]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 67
 text = "Pausa"
 horizontal_alignment = 1
 
@@ -39,14 +39,17 @@ layout_mode = 2
 [node name="ResumeButton" type="Button" parent="Margin/VBox" unique_id=444010339]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "Reanudar"
 
 [node name="SettingsButton" type="Button" parent="Margin/VBox" unique_id=427741152]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "Configuración"
 
 [node name="ExitButton" type="Button" parent="Margin/VBox" unique_id=1941914787]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "Salir al menú principal"
