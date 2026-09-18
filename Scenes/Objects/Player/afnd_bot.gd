@@ -14,6 +14,29 @@ var first_call: bool = true
 var estados: Dictionary = {}  # id -> Estado
 var estado_inicial_id
 
+var contador_q: int = 0
+var nombres_q: Dictionary = {} 
+
+func obtener_nombre_q(id) -> String:
+	if nombres_q.has(id):
+		return nombres_q[id]
+	var nombre = "q%d" % contador_q
+	nombres_q[id] = nombre
+	contador_q += 1
+	return nombre
+
+func iniciar_tabla_afnd(id_raiz) -> void:
+	mainUI.afnd_clear_table()
+	contador_q = 0
+	nombres_q.clear()
+	obtener_nombre_q(id_raiz)  # fuerza que la raíz sea q0
+	mainUI.set_afnd_current_string("")  # o la cadena que corresponda
+
+
+var mainUI: PRINCIPALMENU
+func _init(UI:PRINCIPALMENU) -> void:
+	mainUI = UI
+
 func agregar_estado(id, peso: float = 0.0) -> Estado:
 	if estados.has(id):
 		return estados[id]
@@ -45,26 +68,53 @@ func set_first_move(id_actual, limit: int, generador: Callable) -> void:
 		var clave = p["clave"]
 		var destino_id = p["destino_id"]
 		var peso = p.get("peso", 0.0)
+
 		agregar_transicion(id_actual, clave, destino_id, peso)
+
+		var nombre_actual = obtener_nombre_q(id_actual)
+		var nombre_destino = obtener_nombre_q(destino_id)
+		var move_con_peso = "%s (%.1f)" % [clave, peso]
+
+		var paso_num = mainUI.afnd_add_instruction(nombre_actual, clave, [{"state": nombre_destino, "move": move_con_peso}])
+
+		if clave.find("#") != -1:
+			mainUI.afnd_mark_state_valid(paso_num)
+
 		construir_recursivo(destino_id, id_actual, limit - 1, generador)
-		return 
+		return
 
 func construir_recursivo(id_actual, id_prev, limit: int, generador: Callable) -> void:
 	if id_actual == id_prev or limit <= 0:
 		return
 
 	var posibles: Array = generador.call(id_actual)
-		
-	#print("posible desde ", id_actual, " Pasamos a: ", posibles)
+	if posibles.is_empty():
+		first_call = false
+		return
+
+	var nombre_actual = obtener_nombre_q(id_actual)
+
 	for paso in posibles:
 		var clave = paso["clave"]
 		var destino_id = paso["destino_id"]
 		var peso = paso.get("peso", 0.0)
 
 		agregar_transicion(id_actual, clave, destino_id, peso)
+
+		var nombre_destino = obtener_nombre_q(destino_id)
+		var move_con_peso = "%s (%.1f)" % [clave, peso]
+
+		var transiciones_fila = [{"state": nombre_destino, "move": move_con_peso}]
+
+		var paso_num = mainUI.afnd_add_instruction(nombre_actual, clave, transiciones_fila)
+
+		if clave.find("#") != -1:
+			mainUI.afnd_mark_state_valid(paso_num)
+
 		construir_recursivo(destino_id, id_actual, limit - 1, generador)
+
 	first_call = false
-	
+
 func sumar_rama(id) -> float:
 	var estado = obtener_estado(id)
 	if estado == null:

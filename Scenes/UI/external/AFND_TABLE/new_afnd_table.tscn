@@ -1,0 +1,126 @@
+[gd_scene format=3 uid="uid://biqvxicuu2klx"]
+
+[ext_resource type="Script" uid="uid://cn5ncoi3w61nv" path="res://Scenes/UI/external/AFND_TABLE/afnd_table.gd" id="1_u7j2b"]
+[ext_resource type="PackedScene" uid="uid://xnpc2nbpr0hd" path="res://Scenes/UI/external/AFND_TABLE/new_afnd_table_row.tscn" id="2_ad8gt"]
+
+[node name="NewAfndTable" type="PopupPanel" unique_id=2113710498]
+oversampling_override = 1.0
+size = Vector2i(752, 124)
+visible = true
+script = ExtResource("1_u7j2b")
+_row_scene = ExtResource("2_ad8gt")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=463519646]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.95, 0.95)
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="VBox" type="VBoxContainer" parent="Margin" unique_id=2070500010]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TopRow" type="HBoxContainer" parent="Margin/VBox" unique_id=850647284]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="CadenaBox" type="VBoxContainer" parent="Margin/VBox/TopRow" unique_id=1840636179]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="CadenaTag" type="Label" parent="Margin/VBox/TopRow/CadenaBox" unique_id=1441141517]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.7, 0.55, 1)
+theme_override_font_sizes/font_size = 13
+text = "CADENA ACTUAL:"
+
+[node name="CurrentStringLabel" type="Label" parent="Margin/VBox/TopRow/CadenaBox" unique_id=902461220]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.92, 0.8, 1)
+theme_override_font_sizes/font_size = 20
+text = "—"
+
+[node name="MinimizeButton" type="Button" parent="Margin/VBox/TopRow" unique_id=1393123196]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+text = "Minimizar"
+
+[node name="HeaderPanel" type="PanelContainer" parent="Margin/VBox" unique_id=1971681637]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HeaderRow" type="HBoxContainer" parent="Margin/VBox/HeaderPanel" unique_id=1702814805]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="PasoHeader" type="Label" parent="Margin/VBox/HeaderPanel/HeaderRow" unique_id=1157560620]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.8, 0.6, 1)
+theme_override_font_sizes/font_size = 14
+text = "Paso"
+horizontal_alignment = 1
+
+[node name="EstadoHeader" type="Label" parent="Margin/VBox/HeaderPanel/HeaderRow" unique_id=1265109013]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.8, 0.6, 1)
+theme_override_font_sizes/font_size = 14
+text = "Estado actual"
+horizontal_alignment = 1
+
+[node name="LeeHeader" type="Label" parent="Margin/VBox/HeaderPanel/HeaderRow" unique_id=1612504677]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.8, 0.6, 1)
+theme_override_font_sizes/font_size = 14
+text = "Lee"
+horizontal_alignment = 1
+
+[node name="TransicionHeader" type="Label" parent="Margin/VBox/HeaderPanel/HeaderRow" unique_id=889834196]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.8, 0.6, 1)
+theme_override_font_sizes/font_size = 14
+text = "Transición"
+horizontal_alignment = 1
+
+[node name="NuevoEstadoHeader" type="Label" parent="Margin/VBox/HeaderPanel/HeaderRow" unique_id=1084079653]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.8, 0.6, 1)
+theme_override_font_sizes/font_size = 14
+text = "Nuevo estado"
+horizontal_alignment = 1
+
+[node name="ExplicacionHeader" type="Label" parent="Margin/VBox/HeaderPanel/HeaderRow" unique_id=1329156532]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.8, 0.6, 1)
+theme_override_font_sizes/font_size = 14
+text = "Explicación"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Margin/VBox" unique_id=1198119882]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="RowsContainer" type="VBoxContainer" parent="Margin/VBox/ScrollContainer" unique_id=331583329]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2

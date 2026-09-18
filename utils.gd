@@ -9,6 +9,14 @@ static func obtener_nodos_por_tipo(nodo_raiz: Node, tipo_clase) -> Array:
 		resultado.append_array(obtener_nodos_por_tipo(hijo, tipo_clase))
 	return resultado
 
+static func obtener_nodos_por_nombre(nodo_raiz: Node, name) -> Array:
+	var resultado: Array = []
+	for hijo in nodo_raiz.get_children():
+		if hijo.name == name:
+			resultado.append(hijo)
+		resultado.append_array(obtener_nodos_por_nombre(hijo, name))
+	return resultado
+
 const PREFIJOS_NOTACION = {
 	Piece.Type.Pawn: "",
 	Piece.Type.Knightm: "C",
@@ -17,6 +25,22 @@ const PREFIJOS_NOTACION = {
 	Piece.Type.Queen: "D",
 	Piece.Type.King: "R",
 }
+
+static func get_piece_value(type: int):
+	match type:
+		Piece.Type.Pawn: 
+			return 0
+		Piece.Type.Knightm: 
+			return 2
+		Piece.Type.Bishop:
+			return 2
+		Piece.Type.Rook: 
+			return 4
+		Piece.Type.Queen: 
+			return 8
+		_:
+			return -1
+
 
 static func set_notation(pieza: Piece, destino: Vector2i, 
 kill_piece: bool = false, 
@@ -34,6 +58,18 @@ in_jaque_mate:bool = false) -> String:
 	elif in_jaque_mate:
 		r += '#'
 	return r
+
+
+static func formatear_tiempo(segundos_totales: float) -> String:
+	# 1. Pasamos a entero para evitar problemas con los decimales
+	var segundos_enteros: int = int(segundos_totales)
+	
+	# 2. Calculamos minutos y segundos
+	@warning_ignore("integer_division")
+	var minutos: int = segundos_enteros / 60
+	var segundos: int = segundos_enteros % 60
+	
+	return "%02d:%02d" % [minutos, segundos]
 
 static func check_operation_vec_player(ID_PLAYER: int, piece_pos:Vector2i, combination:Vector2i):
 	if ID_PLAYER == 1:

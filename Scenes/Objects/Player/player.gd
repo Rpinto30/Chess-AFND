@@ -11,7 +11,8 @@ var actual_state = states.WAITING
 func load_data() -> void:
 	board = utils.obtener_nodos_por_tipo(self.chessBoard, Board)[0]
 	board_points = utils.obtener_nodos_por_tipo(self.chessBoard, PointChess)[0]
-
+	board_points_extra = utils.obtener_nodos_por_tipo(self.chessBoard, PointExtraChess)[0]
+	
 	if not board.touched.is_connected(self.cap_signal):
 		board.touched.connect(self.cap_signal)
 	

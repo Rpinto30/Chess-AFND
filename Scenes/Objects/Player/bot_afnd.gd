@@ -4,9 +4,10 @@ extends ChessPlayer
 @export var board_parent: Node2D
 var board: Board
 var board_points: PointChess
+var mainUI: PRINCIPALMENU
 
 var bot_dificulty: int ## 0 Fácil · 1 Medio · 2 Difícil | -1 NA
-enum states {THINKING, SEARCH, SELECT, END}
+enum states {THINKING, SEARCH, SELECT, VALIDMODE, END}
 enum personalidades {DEFENDER, MOVIMIENTO, BLOQUEAR, ATACAR, RETIRAR}
 
 var debug_personalidades = [
@@ -43,8 +44,10 @@ const VALORES_PIEZA = {
 func load_data():
 	board = utils.obtener_nodos_por_tipo(self.chessBoard, Board)[0]
 	board_points = utils.obtener_nodos_por_tipo(self.chessBoard, PointChess)[0]
-
-	afnd = AFND.new()
+	board_points_extra = utils.obtener_nodos_por_tipo(self.chessBoard, PointExtraChess)[0]
+	mainUI = utils.obtener_nodos_por_tipo(self.get_parent(), PRINCIPALMENU)[0]
+	
+	afnd = AFND.new(mainUI)
 	print("[BOT] todo cargado")
 
 func restore():
@@ -63,7 +66,7 @@ func my_pieces_in_danger_type():
 	var n = 0
 	for p in self.my_pieces:
 		if p.actual_pos in self.danger_points: 
-			board_points.set_point(p.actual_pos, Vector2i(2,1))
+			#board_points.set_point(p.actual_pos, Vector2i(2,1))
 			r.append(p.select_type)
 			n += 1
 	return [r, n]
@@ -163,14 +166,15 @@ func main():
 	match actual_state:
 		states.THINKING:
 			#actualizar_emocion()
+			mainUI.afnd_clear_table()
 			pensar()
 			actual_state = states.SELECT
 		states.SELECT:
 			ejecutar_mejor_jugada()
-			actual_state = states.END
+			actual_state = states.VALIDMODE
 		states.END:
-			actual_state = states.THINKING
-			pass #restore() -> lo llama GameManager al cambiar de turno
+			pass#actual_state = states.THINKING
+			#restore() -> lo llama GameManager al cambiar de turno
 
 func pensar() -> void:
 	print("=====================================")
@@ -195,9 +199,10 @@ func ejecutar_mejor_jugada() -> void:
 	if info == null:
 		print("[BOT] No se encontró el movimiento para la clave: ", mejor_clave)
 		return
-	
-	await get_tree().create_timer(1.0).timeout
+	var rng_block = RandomNumberGenerator.new()
+	#await get_tree().create_timer(5, false).timeout
 	print("[BOT] Mejor clave: ", mejor_clave)
 	selected_piece = info["pieza"].actual_pos
+	await get_tree().create_timer(rng_block.randf_range(1.5,5.8)).timeout
 	move_piece(board, info["destino"])
 	actual_state = states.END

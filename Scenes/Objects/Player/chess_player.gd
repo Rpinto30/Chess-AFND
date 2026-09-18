@@ -4,6 +4,7 @@ extends Node2D
 var ID_PLAYER: int
 var player_name: String
 @export var chessBoard: Node2D
+var board_points_extra: PointExtraChess
 enum color_player {WHITE, BLACK}
 @export var type_color_player : color_player
 
@@ -14,7 +15,39 @@ const init_pos_pieces = [
 
 var pieces = []
 var points: int = 0
+#============TIME
 var time: float
+var count_timer: float
+var end_time: bool = false
+var enable_timer: bool = false
+
+func init_time() -> void:
+	if not enable_timer:
+		enable_timer = true
+		#print("Contador reanudado/iniciado.")
+
+func stop_time() -> void:
+	#print(enable_timer)
+	if enable_timer:
+		enable_timer = false
+		#print("Contador frenado.")
+
+func load_time(delta: float, label: Label) -> void:
+	if enable_timer and not end_time:
+		count_timer -= delta
+		
+		label.text = utils.formatear_tiempo(count_timer)
+		#print(utils.formatear_tiempo(count_timer))
+		# Verificación de llegada a 0
+		if count_timer <= 0.0:
+			count_timer = 0.0
+			end_time = true
+			enable_timer = false
+			_al_terminar_tiempo()
+	
+
+func _al_terminar_tiempo() -> void:
+	self.in_jaquemate = true
 
 var my_king: Piece
 var eat_pieces = []
@@ -36,6 +69,10 @@ var put_in_jaquemate_other: bool = false
 var added_points = []
 var selected_piece = Vector2i(-1,-1)
 func move_piece(board: Board, pos: Vector2i):
+	#if is_instance_of(self, Bot):
+	#	await get_tree().create_timer(2).timeout
+	
+	board_points_extra.clear()
 	if is_instance_of(board.matrixRef[pos.y][pos.x], Piece):
 		var eat_piece : Piece = board.matrixRef[pos.y][pos.x]
 		eat_piece.eat_piece(self)
@@ -48,6 +85,12 @@ func move_piece(board: Board, pos: Vector2i):
 	
 	if board.matrixPos[pos.y][pos.x] != 0:
 		aten_piece = true
+		print(board.matrixRef[pos.y][pos.x].select_type)
+		print(self.points)
+		self.points += utils.get_piece_value(
+			board.matrixRef[pos.y][pos.x].select_type
+		)
+		print(self.points)
 	else:
 		aten_piece = false
 	
@@ -86,7 +129,10 @@ func move_piece(board: Board, pos: Vector2i):
 		piece.is_in_other_edge = true
 	else:
 		piece.is_in_other_edge = false
-
+	
+	board_points_extra.set_point(
+		pos, Vector2i(2,3)
+	)
 
 func enroque_move(board: Board, rook: Piece, old_pos:Vector2i, new_pos: Vector2i):
 	var id_piece = board.matrixPos[old_pos.y][old_pos.x]

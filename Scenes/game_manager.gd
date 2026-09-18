@@ -5,7 +5,17 @@ extends Node2D
 @export var board_parent: Node2D
 var board: Board
 
-@export var label: Label
+#=======UI
+@export var MainUI: Control
+var lp1_name: Label
+var lp1_time: Label
+var lp1_points: Label
+var lp1_turn: Label
+
+var lp2_name: Label
+var lp2_time: Label
+var lp2_points: Label
+var lp2_turn: Label
 
 @export var player_ref: PackedScene
 @export var bot_ref: PackedScene
@@ -26,6 +36,7 @@ func default_data(mode: String, color: int, style:int): # 1v1 | bot; 0: white | 
 	player1.type_color_player = player1.color_player.BLACK if color == 1 else player1.color_player.WHITE
 	player1.ID_PLAYER = 1
 	player1.time = 600
+	player1.count_timer = player1.time
 	players.append(player1)
 	get_tree().current_scene.add_child(player1)
 	
@@ -40,7 +51,8 @@ func default_data(mode: String, color: int, style:int): # 1v1 | bot; 0: white | 
 	player2.chessBoard = board_parent
 	player2.type_color_player = player2.color_player.BLACK if  player1.type_color_player == 0 else player2.color_player.WHITE	
 	player2.ID_PLAYER = 2
-	player1.time = 600
+	player2.time = 600
+	player2.count_timer = player2.time
 	players.append(player2)
 	get_tree().current_scene.add_child(player2)
 	
@@ -55,6 +67,7 @@ func load_global_data():
 	player1.type_color_player = player1.color_player.BLACK if GlobalManager.side == 1 else player1.color_player.WHITE
 	player1.ID_PLAYER = 1
 	player1.time = GlobalManager.time
+	player1.count_timer = player1.time
 	players.append(player1)
 	get_tree().current_scene.add_child(player1)
 	
@@ -69,6 +82,7 @@ func load_global_data():
 	player2.type_color_player = player2.color_player.BLACK if player1.type_color_player == 0 else player2.color_player.WHITE	
 	player2.ID_PLAYER = 2
 	player2.time = GlobalManager.time
+	player2.count_timer = player2.time
 	players.append(player2)
 	get_tree().current_scene.add_child(player2)
 	
@@ -78,15 +92,42 @@ func load_global_data():
 
 func _ready() -> void:
 	#players = utils.obtener_nodos_por_tipo(self, ChessPlayer).slice(0,2)
+	#======SEARCH UI
+	lp1_name = utils.obtener_nodos_por_nombre(MainUI, "Player1NameLabel")[0]
+	lp2_name = utils.obtener_nodos_por_nombre(MainUI, "Player2NameLabel")[0]
+	
+	lp1_time = utils.obtener_nodos_por_nombre(MainUI, "Player1TimeLabel")[0]
+	lp2_time = utils.obtener_nodos_por_nombre(MainUI, "Player2TimeLabel")[0]
+	
+	lp1_points = utils.obtener_nodos_por_nombre(MainUI, "Player1ScoreLabel")[0]
+	lp2_points = utils.obtener_nodos_por_nombre(MainUI, "Player2ScoreLabel")[0]
+	
+	lp1_turn =  utils.obtener_nodos_por_nombre(MainUI, "Player1Turn")[0]
+	lp2_turn =  utils.obtener_nodos_por_nombre(MainUI, "Player2Turn")[0]
+	#===============================================
 	board = utils.obtener_nodos_por_tipo(board_parent, Board)[0]
-	default_data('bot', 1, 0)
-	#load_global_data()
+	
+	
+	default_data('bot', 0, 0)
 	for i in players:
 		set_pieces(i, i.ID_PLAYER)
 		
 	#p1
-	if players[0].type_color_player == players[0].color_player.WHITE: turn = turns.P1
-	else: turn = turns.P2
+	if players[0].type_color_player == players[0].color_player.WHITE:
+		lp1_name.add_theme_color_override('font_color', Color.WHITE)
+		lp1_name.add_theme_color_override('font_outline_color', Color.BLACK)
+		
+		lp2_name.add_theme_color_override('font_color', Color.BROWN)
+		lp2_name.add_theme_color_override('font_outline_color', Color.WHITE)
+		
+		turn = turns.P1
+	else: 
+		lp2_name.add_theme_color_override('font_color', Color.WHITE)
+		lp2_name.add_theme_color_override('font_outline_color', Color.BLACK)
+		
+		lp1_name.add_theme_color_override('font_color', Color.BROWN)
+		lp1_name.add_theme_color_override('font_outline_color', Color.WHITE)
+		turn = turns.P2
 	
 	utils.reveal_scene()
 
@@ -132,24 +173,50 @@ func select_other_by_turn() -> ChessPlayer:
 
 func manager_turns():
 	var player = select_player_by_turn()
-	label.text = "Turno de: " + player.player_name
+	#label.text = "Turno de: " + player.player_name
 	player.main()
+	player.init_time()
 	
 	#CAMBIO DE TURNO
 	if player.actual_state == player.states.END:
-		if turn == turns.P1:  turn = turns.P2
-		else: turn = turns.P1
-		
+		if turn == turns.P1:  
+			turn = turns.P2
+			lp2_turn.show()
+			lp1_turn.hide()
+		else: 
+			turn = turns.P1
+			lp1_turn.show()
+			lp2_turn.hide()
 		#aca cambia de turno, por eso uso otra vez select_player_by_turn()
 		var other = select_player_by_turn() #p1 -> p2
 		player.set_danger_points(other, board)
+		player.stop_time()
+		if player.aten_piece:
+			if player.ID_PLAYER == 1:
+				lp1_points.text = str(player.points)
+			if player.ID_PLAYER == 2:
+				lp2_points.text = str( player.points)
+		
 		if is_instance_of(other, Bot):
 			print("El jugador responde con: ",player.last_move_notation)
 			other.registrar_movimiento_player(player.last_move_notation)
 		other.check_jaque()
 		player.restore()
 		
-		
+		if player.in_jaque:
+			if player.ID_PLAYER == 1:
+				lp1_turn.text = "¡EN JAQUE!"
+				lp2_turn.text = "¡TU TURNO!"
+			else:
+				lp2_turn.text = "¡EN JAQUE!"
+				lp1_turn.text = "¡TU TURNO!"
+		elif player.in_jaquemate:
+			if player.ID_PLAYER == 1:
+				lp1_turn.text = "¡JAQUEMATE!"
+				lp2_turn.text = "¡TU TURNO!"
+			else:
+				lp2_turn.text = "¡JAQUEMATE!"
+				lp1_turn.text = "¡TU TURNO!"
 """
 estados especiales:
 - jaquemate (sin movimientos disponibles)
@@ -181,3 +248,5 @@ func _process(_delta: float) -> void:
 		manager_turns()
 	process_jaquemate()
 	
+	players[0].load_time(_delta, lp1_time)
+	players[1].load_time(_delta, lp2_time)

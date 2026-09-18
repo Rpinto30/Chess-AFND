@@ -1,3 +1,4 @@
+class_name PRINCIPALMENU
 extends Control
 ## UI principal del juego. Contiene la barra superior (menú + título),
 ## la fila de jugadores (nombre, tiempo, puntaje) y por ahora un
@@ -7,9 +8,11 @@ signal exit_to_main_menu_requested
 signal piece_style_changed(style: String)
 
 @onready var menu_button: Button = %MenuButton
-@onready var pause_menu: PopupPanel = %PauseMenu
-@onready var settings_popup: PopupPanel = %SettingsPopup
+@export var pause_menu: PopupPanel #= %PauseMenu
+@export var settings_popup: PopupPanel #= %SettingsPopup
+@export var afnd_table: PopupPanel 
 
+@export var show_afnd_button: Button 
 @onready var player1_name_label: Label = %Player1NameLabel
 @onready var player1_time_label: Label = %Player1TimeLabel
 @onready var player1_score_label: Label = %Player1ScoreLabel
@@ -24,8 +27,9 @@ func _ready() -> void:
 	pause_menu.open_settings_requested.connect(_on_open_settings_requested)
 	pause_menu.exit_to_main_menu_requested.connect(_on_exit_to_main_menu_requested)
 	settings_popup.piece_style_saved.connect(_on_piece_style_saved)
+	show_afnd_button.pressed.connect(_on_show_afnd_pressed)  
 
-
+	
 func _on_menu_button_pressed() -> void:
 	pause_menu.popup_centered()
 
@@ -43,6 +47,10 @@ func _on_exit_to_main_menu_requested() -> void:
 
 func _on_piece_style_saved(style: String) -> void:
 	piece_style_changed.emit(style)
+
+
+func _on_show_afnd_pressed() -> void:
+	afnd_table.show()
 
 
 # --------------------------------------------------------------------
@@ -75,3 +83,20 @@ func set_player_score(player_index: int, score: int) -> void:
 ## Útil para inicializar el popup con la preferencia guardada del jugador.
 func set_current_piece_style(style: String) -> void:
 	settings_popup.set_current_style(style)
+	
+
+#============================================
+func set_afnd_current_string(cadena: String) -> void:
+	afnd_table.set_current_string(cadena)
+
+
+func afnd_clear_table() -> void:
+	afnd_table.clear_table()
+
+
+func afnd_add_instruction(estado_actual: String, simbolo: String, transiciones: Array, explicacion: String = "") -> int:
+	return afnd_table.add_instruction(estado_actual, simbolo, transiciones, explicacion)
+
+
+func afnd_mark_state_valid(step: int) -> void:
+	afnd_table.mark_state_valid(step)
