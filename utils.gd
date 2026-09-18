@@ -18,12 +18,22 @@ const PREFIJOS_NOTACION = {
 	Piece.Type.King: "R",
 }
 
-static func set_notation(pieza: Piece, destino: Vector2i) -> String:
-	var letras = "ABCDEFGH"
+static func set_notation(pieza: Piece, destino: Vector2i, 
+kill_piece: bool = false, 
+in_jaque:bool = false, 
+in_jaque_mate:bool = false) -> String:
+	var letras = "abcdefgh"
 	var letra = letras[destino.x] if destino.x < letras.length() else "?"
-	var numero = destino.y + 1
+	if kill_piece:
+		letra += 'x'
+	var numero = destino.y 
 	var prefijo = PREFIJOS_NOTACION.get(pieza.select_type, "")
-	return prefijo + letra + str(numero)
+	var r = prefijo + letra + str(numero)
+	if in_jaque:
+		r += '+'
+	elif in_jaque_mate:
+		r += '#'
+	return r
 
 static func check_operation_vec_player(ID_PLAYER: int, piece_pos:Vector2i, combination:Vector2i):
 	if ID_PLAYER == 1:

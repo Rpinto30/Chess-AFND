@@ -31,13 +31,13 @@ func establecer_inicial(id) -> void:
 	agregar_estado(id)
 
 func obtener_estado(id) -> Estado:
-	return estados.get(id, null) #Devuelve el estado con el ID especificado, o null si no existe
+	return estados.get(id, null) 
 
 func limpiar() -> void:
 	estados.clear()
 	estado_inicial_id = null
 
-func set_first_move(id_actual, id_prev, limit: int, generador: Callable) -> void:
+func set_first_move(id_actual, limit: int, generador: Callable) -> void:
 	var posibles: Array = generador.call(id_actual)
 	var p = posibles.pick_random()
 	if p:

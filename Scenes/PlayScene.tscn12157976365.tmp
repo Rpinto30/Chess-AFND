@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://b71uny8tmw428" path="res://Scenes/Objects/Player/Player.tscn" id="2_1kbfr"]
 [ext_resource type="Texture2D" uid="uid://ekw2lqcn2tuf" path="res://Resources/Board/complement2.png" id="2_353r0"]
 [ext_resource type="PackedScene" uid="uid://1qsp47vv2jwb" path="res://Scenes/Objects/Player/bot.tscn" id="4_7vjhc"]
-[ext_resource type="PackedScene" uid="uid://c6ojfgr4gk6md" path="res://Scenes/UI/external/main_ui.tscn" id="6_pd2lr"]
 
 [node name="PlayScene" type="Node2D" unique_id=1382223566 node_paths=PackedStringArray("board_parent", "label")]
 script = ExtResource("1_535oe")
@@ -16,33 +15,24 @@ bot_ref = ExtResource("4_7vjhc")
 
 [node name="Complement2" type="Sprite2D" parent="." unique_id=1413793942]
 modulate = Color(0.7708395, 0.77083945, 0.77083945, 1)
-position = Vector2(152, 292)
-scale = Vector2(1.2774414, 1.2774414)
+position = Vector2(162, 300)
+scale = Vector2(0.6, 0.6)
 texture = ExtResource("2_353r0")
 
 [node name="Chess" parent="." unique_id=820938813 instance=ExtResource("1_6x5ix")]
-position = Vector2(-84, 108)
-scale = Vector2(3.895, 3.895)
+position = Vector2(37, 203)
+scale = Vector2(2, 2)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=790168747]
 position = Vector2(166, 294)
+zoom = Vector2(2.17, 2.17)
 
 [node name="Bot" parent="." unique_id=1294911720 node_paths=PackedStringArray("chessBoard") instance=ExtResource("4_7vjhc")]
 position = Vector2(0, -1)
 chessBoard = NodePath("../Chess")
 type_color_player = 1
 
-[node name="MainUI" parent="." unique_id=2077753106 instance=ExtResource("6_pd2lr")]
-custom_minimum_size = Vector2(720, 250)
-offset_left = -194.0
-offset_top = -347.0
-offset_right = 526.0
-offset_bottom = -97.0
-offset_transform_enabled = true
-offset_transform_visual_only = false
-
 [node name="UI" type="Control" parent="." unique_id=206941260]
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

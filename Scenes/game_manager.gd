@@ -143,11 +143,10 @@ func manager_turns():
 		#aca cambia de turno, por eso uso otra vez select_player_by_turn()
 		var other = select_player_by_turn() #p1 -> p2
 		player.set_danger_points(other, board)
-		other.check_jaque()
 		if is_instance_of(other, Bot):
 			print("El jugador responde con: ",player.last_move_notation)
 			other.registrar_movimiento_player(player.last_move_notation)
-		
+		other.check_jaque()
 		player.restore()
 		
 		

@@ -28,6 +28,10 @@ var in_jaquemate: bool
 var last_move_notation: String
 #tablas nio xd
 
+var aten_piece: bool = false
+var put_in_jaque_other: bool = false
+var put_in_jaquemate_other: bool = false
+
 #=========================MOVE PIECES================================
 var added_points = []
 var selected_piece = Vector2i(-1,-1)
@@ -42,6 +46,11 @@ func move_piece(board: Board, pos: Vector2i):
 	var _dx = piece.actual_pos.x - pos.x
 	var _dy = piece.actual_pos.y - pos.y
 	
+	if board.matrixPos[pos.y][pos.x] != 0:
+		aten_piece = true
+	else:
+		aten_piece = false
+	
 	board.matrixRef[pos.y][pos.x] = piece
 	board.matrixRef[selected_piece.y][selected_piece.x] = ""
 	
@@ -52,7 +61,6 @@ func move_piece(board: Board, pos: Vector2i):
 	
 	piece.global_position = pos_global
 	piece.actual_pos = pos
-	
 	
 	#==========enorque================
 	if abs(_dx) == 2 and piece.select_type == 5:
@@ -65,7 +73,12 @@ func move_piece(board: Board, pos: Vector2i):
 			if rook != null:
 				enroque_move(board, rook, Vector2i(0,pos.y), Vector2i(piece.actual_pos.x+1, pos.y))
 	else:
-		last_move_notation = utils.set_notation(piece, pos)
+		#AGREGAR NOTACION
+		last_move_notation = utils.set_notation(piece, pos, 
+			self.aten_piece,
+			put_in_jaque_other,
+			put_in_jaquemate_other
+		)
 	
 	#============condiciones============
 	piece.is_first_move = false
@@ -80,6 +93,12 @@ func enroque_move(board: Board, rook: Piece, old_pos:Vector2i, new_pos: Vector2i
 
 	board.matrixRef[new_pos.y][new_pos.x] = rook
 	board.matrixRef[old_pos.y][old_pos.x] = ""
+
+		
+	if board.matrixPos[new_pos.y][new_pos.x] != 0:
+		aten_piece = true
+	else:
+		aten_piece = false
 
 	board.matrixPos[new_pos.y][new_pos.x] = id_piece
 	board.matrixRef[old_pos.y][old_pos.x] = 0
@@ -109,6 +128,10 @@ func set_danger_points(other: ChessPlayer, board: Board, limits = true):
 		var new_ = r.filter(func(x): return not other.danger_points.has(x))
 		
 		other.danger_points.append_array(new_)
+		if other.my_king.actual_pos in other.danger_points:
+			put_in_jaque_other = true
+		else:
+			put_in_jaque_other = false
 
 #ESTE MÉTODO SIRVE PARA LAS PIEZAS QUE PUEDEN BLOQUEAR UN JAQUE
 #Estoy asegurado que aquí other ya está asignado por set_danget_points
@@ -121,13 +144,13 @@ func get_pieces_with_jaque(other: ChessPlayer, board: Board, limits = true):
 			board,
 			piece.get_my_valid_moves(piece.actual_pos, board, self, limits, true)
 		)
-		print(r)
+		#print(r)
 		"""
 		PARA P1: LOS MOVIMIENTOS PARA BLOQUEAR DEBEN ESTAR ARRIBA DEL REY
 		PARA P2: LOS MOVIMIENTOS PARA BLOQUEAR DEBEN ESTAR ABAJO DEL REY
 		"""
 		if other.my_king.actual_pos in r:
-			print("Pieza que 've' al rey: ", piece.select_type, " en ", piece.actual_pos)
+			#print("Pieza que 've' al rey: ", piece.select_type, " en ", piece.actual_pos)
 			var new_ = r.filter(func(x): return not result.has(x))
 			
 			var king_pos = other.my_king.actual_pos
@@ -137,7 +160,7 @@ func get_pieces_with_jaque(other: ChessPlayer, board: Board, limits = true):
 
 			var max_steps = max(abs(attacker_pos.x - king_pos.x), abs(attacker_pos.y - king_pos.y))
 			
-			print(new_)
+			#print(new_)
 			#Antes de filtarr todo, si pedes comerte a la pieza, se agreaga
 			result.append(attacker_pos)
 
@@ -170,7 +193,7 @@ func get_pieces_with_jaque(other: ChessPlayer, board: Board, limits = true):
 				return steps >= 1 and steps <= max_steps
 			)
 			"""
-			print("new: ", new_)
+			#print("new: ", new_)
 			result.append_array(new_)
 	return result
 

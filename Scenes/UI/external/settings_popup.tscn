@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://settings_popup.gd" id="1"]
+
+[node name="SettingsPopup" type="PopupPanel"]
+title = "Configuración"
+initial_position = 1
+size = Vector2i(320, 200)
+unresizable = true
+script = ExtResource("1")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="StyleLabel" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.6, 0.5, 1)
+text = "Estilo de piezas"
+
+[node name="HSeparator" type="HSeparator" parent="Margin/VBox"]
+layout_mode = 2
+
+[node name="StyleToggleButton" type="Button" parent="Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 40)
+text = "  Piezas Mayas"
+
+[node name="ButtonsRow" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+alignment = 2
+theme_override_constants/separation = 12
+
+[node name="CancelButton" type="Button" parent="Margin/VBox/ButtonsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Cancelar"
+
+[node name="SaveButton" type="Button" parent="Margin/VBox/ButtonsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Guardar"

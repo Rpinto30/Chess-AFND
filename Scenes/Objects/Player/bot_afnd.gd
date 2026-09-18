@@ -9,6 +9,14 @@ var bot_dificulty: int ## 0 Fácil · 1 Medio · 2 Difícil | -1 NA
 enum states {THINKING, SEARCH, SELECT, END}
 enum personalidades {DEFENDER, MOVIMIENTO, BLOQUEAR, ATACAR, RETIRAR}
 
+var debug_personalidades = [
+	"DEFENDIENDO",
+	"MOVIMIENTO",
+	"BLOQUEANDO",
+	"ATACANDO",
+	"RETIRADA"
+]
+
 var actual_state = states.THINKING
 var emocion_actual = personalidades.MOVIMIENTO
 
@@ -29,7 +37,7 @@ const VALORES_PIEZA = {
 	Piece.Type.Bishop: 3.0,
 	Piece.Type.Rook: 5.0,
 	Piece.Type.Queen: 9.0,
-	Piece.Type.King: 0.0,
+	Piece.Type.King: -1.0,
 }
 
 func load_data():
@@ -49,11 +57,57 @@ func registrar_movimiento_player(notacion: String) -> void:
 	player_moves += "|" + notacion
 	actualizar_emocion()
 
-func actualizar_emocion() -> void:
-	print("Mi emocion actual: ",emocion_actual)
-	
-	pass
 
+func my_pieces_in_danger_type():
+	var r = []
+	var n = 0
+	for p in self.my_pieces:
+		if p.actual_pos in self.danger_points: 
+			board_points.set_point(p.actual_pos, Vector2i(2,1))
+			r.append(p.select_type)
+			n += 1
+	return [r, n]
+
+func get_avg_pos_y_pieces():
+	var n = 0
+	var y = 0
+	if len(self.my_pieces) > 0:
+		for p in self.my_pieces:
+			y += p.actual_pos.y
+			n+=1
+		return int(y/n)
+	else: return 0
+	
+#EMOCIONES
+func actualizar_emocion() -> void:
+	print("Mi emocion actual: ", debug_personalidades[emocion_actual])
+	if self.in_jaque: 
+		self.emocion_actual = self.personalidades.BLOQUEAR
+	else:
+		var rng_block = RandomNumberGenerator.new()
+		var last_move = player_moves.split('|')[-1]
+		var pieces_in_danger = my_pieces_in_danger_type()
+		var avg_pos_y = get_avg_pos_y_pieces() 
+		
+		print("LOS MOVIMIENTOS DEL JUGADOR: ",player_moves)
+		
+		if len(self.my_pieces) < rng_block.randi_range(5, 10) or (
+			last_move.contains('x') and [true, false].pick_random()
+		):
+			self.emocion_actual = self.personalidades.RETIRAR 
+		
+		if pieces_in_danger[1] > len(my_pieces) * 0.4:
+			if rng_block.randi_range(0, 1) == 0:
+				self.emocion_actual = self.personalidades.BLOQUEAR 
+			else:
+				self.emocion_actual = self.personalidades.ATACAR 
+
+		print(pieces_in_danger[0].slice(0,3), pieces_in_danger[1])
+		print(avg_pos_y)
+		if avg_pos_y < rng_block.randi_range(2, 6) and(
+			 pieces_in_danger[1] > 2
+		) :
+			self.emocion_actual = self.personalidades.ATACAR 
 
 func valor_pieza_en(pos: Vector2i) -> float:
 	if not Piece.filt_pos_limits(pos, board):
@@ -89,17 +143,17 @@ func generador_movimientos(id_actual) -> Array:
 func ponderar_movimiento(pieza: Piece, destino: Vector2i, emocion) -> float:
 	match emocion:
 		personalidades.ATACAR:
-			print("Atacando")
-			return valor_pieza_en(destino) * 10.0 + 1.0
+			#print("Atacando")
+			return valor_pieza_en(destino) * 5.0 + 1.0
 		personalidades.DEFENDER:
-			print("Defendiendo")
+			#print("Defendiendo")
 			# prioriza mover piezas de menor valor, mantenerse "atrás"
 			return 10.0 - VALORES_PIEZA.get(pieza.select_type, 0.0)
 		personalidades.BLOQUEAR:
-			print("Bloqueando")
+			#print("Bloqueando")
 			return valor_pieza_en(destino) + 1.0
 		personalidades.RETIRAR:
-			print("Retirando")
+			#print("Retirando")
 			var dist_rey = abs(destino.y - my_king.actual_pos.y) + abs(destino.x - my_king.actual_pos.x)
 			return -float(dist_rey)
 		_: # MOVIMIENTO
@@ -127,7 +181,7 @@ func pensar() -> void:
 	afnd.limpiar()
 	afnd.establecer_inicial(ID_RAIZ)
 	if afnd.first_call:
-		afnd.set_first_move(ID_RAIZ, null, 10, generador_movimientos)
+		afnd.set_first_move(ID_RAIZ, 10, generador_movimientos)
 	else:
 		afnd.construir_recursivo(ID_RAIZ, null, 10, generador_movimientos)
 
@@ -146,3 +200,4 @@ func ejecutar_mejor_jugada() -> void:
 	print("[BOT] Mejor clave: ", mejor_clave)
 	selected_piece = info["pieza"].actual_pos
 	move_piece(board, info["destino"])
+	actual_state = states.END

@@ -1,0 +1,146 @@
+[gd_scene format=3 uid="uid://c6ojfgr4gk6md"]
+
+[node name="MainUI" type="Control" unique_id=2077753106]
+propagate_maximum_size = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="." unique_id=453603505]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.11, 0.08, 0.05, 1)
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=429760462]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Layout" type="VBoxContainer" parent="Margin" unique_id=391595502]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TopBar" type="PanelContainer" parent="Margin/Layout" unique_id=51497750]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+
+[node name="TopBarH" type="HBoxContainer" parent="Margin/Layout/TopBar" unique_id=1006321403]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="MenuButton" type="Button" parent="Margin/Layout/TopBar/TopBarH" unique_id=1358108891]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "≡"
+
+[node name="TitlePanel" type="PanelContainer" parent="Margin/Layout/TopBar/TopBarH" unique_id=462196395]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TitleLabel" type="Label" parent="Margin/Layout/TopBar/TopBarH/TitlePanel" unique_id=750473199]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.8, 0.6, 1)
+theme_override_font_sizes/font_size = 18
+text = "TÍTULO Y OPCIONES"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlayersRow" type="HBoxContainer" parent="Margin/Layout" unique_id=710993920]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Player1Panel" type="PanelContainer" parent="Margin/Layout/PlayersRow" unique_id=834164633]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Player1VBox" type="VBoxContainer" parent="Margin/Layout/PlayersRow/Player1Panel" unique_id=1626485913]
+layout_mode = 2
+
+[node name="Player1NameLabel" type="Label" parent="Margin/Layout/PlayersRow/Player1Panel/Player1VBox" unique_id=152101102]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/outline_size = 15
+theme_override_font_sizes/font_size = 40
+text = "Jugador 1"
+
+[node name="Player1TimeLabel" type="Label" parent="Margin/Layout/PlayersRow/Player1Panel/Player1VBox" unique_id=266045043]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 25
+text = "10:00:00"
+
+[node name="Player1ScoreRow" type="HBoxContainer" parent="Margin/Layout/PlayersRow/Player1Panel/Player1VBox" unique_id=1491869245]
+layout_mode = 2
+
+[node name="Player1ScoreTag" type="Label" parent="Margin/Layout/PlayersRow/Player1Panel/Player1VBox/Player1ScoreRow" unique_id=1492975229]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Puntaje: "
+
+[node name="Player1ScoreLabel" type="Label" parent="Margin/Layout/PlayersRow/Player1Panel/Player1VBox/Player1ScoreRow" unique_id=518303240]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "0"
+
+[node name="Player2Panel" type="PanelContainer" parent="Margin/Layout/PlayersRow" unique_id=923202117]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Player2VBox" type="VBoxContainer" parent="Margin/Layout/PlayersRow/Player2Panel" unique_id=1894824001]
+layout_mode = 2
+
+[node name="Player2NameLabel" type="Label" parent="Margin/Layout/PlayersRow/Player2Panel/Player2VBox" unique_id=1876023007]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/outline_size = 15
+theme_override_font_sizes/font_size = 40
+text = "Jugador 2"
+
+[node name="Player2TimeLabel" type="Label" parent="Margin/Layout/PlayersRow/Player2Panel/Player2VBox" unique_id=460990461]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 25
+text = "10:00:00"
+
+[node name="Player2ScoreRow" type="HBoxContainer" parent="Margin/Layout/PlayersRow/Player2Panel/Player2VBox" unique_id=772044389]
+layout_mode = 2
+
+[node name="Player2ScoreTag" type="Label" parent="Margin/Layout/PlayersRow/Player2Panel/Player2VBox/Player2ScoreRow" unique_id=342376590]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Puntaje: "
+
+[node name="Player2ScoreLabel" type="Label" parent="Margin/Layout/PlayersRow/Player2Panel/Player2VBox/Player2ScoreRow" unique_id=1804550254]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "0"
+
+[node name="PauseMenu" parent="." unique_id=1910888051]
+unique_name_in_owner = true
+visible = false
+
+[node name="SettingsPopup" parent="." unique_id=935313080]
+unique_name_in_owner = true
+visible = false
