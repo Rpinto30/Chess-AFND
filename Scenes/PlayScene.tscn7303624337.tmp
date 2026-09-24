@@ -38,7 +38,7 @@ custom_minimum_size = Vector2(720, 340)
 offset_left = -194.0
 offset_top = -347.0
 offset_right = 526.0
-offset_bottom = 55.0
+offset_bottom = -7.0
 offset_transform_enabled = true
 offset_transform_visual_only = false
 

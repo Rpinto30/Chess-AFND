@@ -60,6 +60,7 @@ func cap_signal(touched: bool, pos: Vector2i):
 					if not self.in_jaque:
 						p = piece.get_my_valid_moves(pos, board, self)
 						#debug_set_points_danger()
+						show_menu_coronate(pos, piece) #print("touche:", pos)
 						set_board_points(pos, p)
 					else:
 						p = self.valid_moves_jaque(board,piece)
@@ -78,6 +79,26 @@ func cap_signal(touched: bool, pos: Vector2i):
 		board.touched.disconnect(self.cap_signal)
 
 #===================VERIFY VALID MOVE=======================
+func show_menu_coronate(pos: Vector2i, piece: Piece):
+	if piece.can_coronate:
+		if piece.player_owner.ID_PLAYER == 1:
+			if pos.y == 0:
+				piece.can_coronate = true
+				if piece.select_type == 0:
+					print("PLAYERCORONATE")
+					coronate_menu_show(piece)
+			else:
+				piece.can_coronate = false
+		else:
+			if pos.y == board.SIZE.y-1:
+				piece.can_coronate = true
+				if piece.select_type == 0:
+					print("PLAYERCORONATE")
+					coronate_menu_show(piece)
+			else:
+				piece.can_coronate = false
+	
+
 
 func cap_select(touched: bool, pos: Vector2i):
 	if touched:

@@ -56,6 +56,11 @@ func set_text_won_menu(text: String):
 	var t = utils.obtener_nodos_por_nombre(won_menu, 'LabelWon')[0]
 	t.text = text
 
+func set_cadena_won(text: String):
+	var t = utils.obtener_nodos_por_nombre(won_menu, 'cadena_final')[0]
+	t.text = text
+
+
 func _on_show_afnd_pressed() -> void:
 	afnd_table.show()
 

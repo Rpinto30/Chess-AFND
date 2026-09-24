@@ -16,6 +16,7 @@ var estado_inicial_id
 
 var contador_q: int = 0
 var nombres_q: Dictionary = {} 
+var debug_lines: bool = false
 
 func obtener_nombre_q(id) -> String:
 	if nombres_q.has(id):
@@ -83,7 +84,8 @@ func set_first_move(id_actual, limit: int, generador: Callable) -> void:
 
 		if clave.find("#") != -1:
 			mainUI.afnd_mark_state_valid(paso_num)
-
+		
+		if debug_lines: ArrowPath.clear_all(bot.layer_arrows)
 		construir_recursivo(destino_id, id_actual, limit - 1, generador)
 		return
 
@@ -120,8 +122,16 @@ func construir_recursivo(id_actual, id_prev, limit: int, generador: Callable) ->
 		if clave.find("#") != -1:
 			mainUI.afnd_mark_state_valid(paso_num)
 			continue  # también aceptación por jaque mate real, no seguimos esta rama
+		
+		
+		if limit == 10 and debug_lines:
+			ArrowPath.draw_arrow(
+				pieza_paso.actual_pos, destino_paso,
+				bot.layer_arrows
+			)
 
 		var snap = bot._simular_movimiento(pieza_paso, destino_paso)
+		
 		construir_recursivo(destino_id, id_actual, limit - 1, generador)
 		bot._deshacer_movimiento(snap)
 

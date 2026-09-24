@@ -17,6 +17,8 @@ var lp2_time: Label
 var lp2_points: Label
 var lp2_turn: Label
 
+var jugadas_label: Label
+
 @export var player_ref: PackedScene
 @export var bot_ref: PackedScene
 
@@ -104,13 +106,15 @@ func _ready() -> void:
 	
 	lp1_turn =  utils.obtener_nodos_por_nombre(MainUI, "Player1Turn")[0]
 	lp2_turn =  utils.obtener_nodos_por_nombre(MainUI, "Player2Turn")[0]
+	
+	jugadas_label =  utils.obtener_nodos_por_nombre(MainUI, "Jugadas")[0]
 	#===============================================
 	board = utils.obtener_nodos_por_tipo(board_parent, Board)[0]
 	
-	load_global_data()
+	#load_global_data()
 	lp1_name.text = GlobalManager.player1_name
 	lp2_name.text = GlobalManager.player2_name
-	#default_data('bot', 0, 0)
+	default_data('bot', 0, 0)
 	for i in players:
 		set_pieces(i, i.ID_PLAYER)
 		
@@ -204,21 +208,44 @@ func manager_turns():
 			other.registrar_movimiento_player(player.last_move_notation)
 		other.check_jaque()
 		player.restore()
+		#CADENA DE JUGADAS
+		if player.type_color_player == 1:
+			jugadas_label.text += "○"
+		else: jugadas_label.text += "●"
+		jugadas_label.text += player.last_move_notation
 		
-		if player.in_jaque:
-			if player.ID_PLAYER == 1:
+		
+		if other.in_jaque == other.states_game.JAQUE:
+			jugadas_label.text += "+"
+			if other.ID_PLAYER == 1:
 				lp1_turn.text = "¡EN JAQUE!"
+				lp1_turn.add_theme_color_override("font_color", Color("db9100ff"))
 				lp2_turn.text = "¡TU TURNO!"
+				lp2_turn.add_theme_color_override("font_color", Color("ffffffff"))
 			else:
 				lp2_turn.text = "¡EN JAQUE!"
+				lp2_turn.add_theme_color_override("font_color", Color("db9100ff"))
 				lp1_turn.text = "¡TU TURNO!"
-		elif player.in_jaquemate:
-			if player.ID_PLAYER == 1:
+				lp1_turn.add_theme_color_override("font_color", Color("ffffffff"))
+		elif other.in_jaquemate:
+			jugadas_label.text += "#"
+			if other.ID_PLAYER == 1:
 				lp1_turn.text = "¡JAQUEMATE!"
+				lp1_turn.add_theme_color_override("font_color", Color("#ff0000"))
 				lp2_turn.text = "¡TU TURNO!"
+				lp2_turn.add_theme_color_override("font_color", Color("ffffffff"))
 			else:
 				lp2_turn.text = "¡JAQUEMATE!"
+				lp2_turn.add_theme_color_override("font_color", Color("#ff0000"))
 				lp1_turn.text = "¡TU TURNO!"
+				lp1_turn.add_theme_color_override("font_color", Color("ffffffff"))
+		else:
+			lp1_turn.text = "¡TU TURNO!"
+			lp2_turn.text = "¡TU TURNO!"
+			lp1_turn.add_theme_color_override("font_color", Color("ffffffff"))
+			lp2_turn.add_theme_color_override("font_color", Color("ffffffff"))
+		#CADENA DE JUGADAS
+		jugadas_label.text += " | "
 """
 estados especiales:
 - jaquemate (sin movimientos disponibles)
@@ -236,6 +263,7 @@ func process_jaquemate():
 	
 	if not there_king: player.in_jaquemate = true
 	
+	MainUI.set_cadena_won(jugadas_label.text)
 	if player.in_jaquemate:
 		MainUI.on_won()
 		MainUI.set_text_won_menu("EL GANADOR ES: " + select_other_by_turn().player_name)

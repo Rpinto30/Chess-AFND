@@ -1,20 +1,5 @@
 #CAMBIADO
 extends Control
-"""
-Claude me avisó de cómo conectar scenes entre ellas, pero hay una cosa que te dejo aquí y es 
-que hay que agregar un par de variables globales para que el timer que escojás aquí se mestre en la UI
-y básicamente dice así:
-	'Ve a Project > Project Settings > Autoload y agrega un script nuevo (ej. Global.gd) con variables: 
-	nombre_usuario, dificultad_bot, modo, bando_maya, tiempo_segundos. Sirve para pasar datos entre escenas, 
-	ya que al cambiar de escena se pierden las referencias directas.
-	ss
-	En main_menu.gd, conecta tus propias señales a funciones que escriban en Global y cambien de escena: 
-	configuracion_actualizada.connect(func(n, d): Global.nombre_usuario = n; 
-	Global.dificultad_bot = d) partida_iniciada.connect(func(modo, bando, seg): 
-	Global.modo = modo Global.bando_maya = bando Global.tiempo_segundos = seg get_tree().change_scene_to_file("res://Game.tscn") )' - Claude
-
-"""
-
 
 # ─────────────────────────────────────────────
 #  SEÑALES (conectar desde la escena que instancie este menú)

@@ -85,12 +85,9 @@ func move_piece(board: Board, pos: Vector2i):
 	
 	if board.matrixPos[pos.y][pos.x] != 0:
 		aten_piece = true
-		print(board.matrixRef[pos.y][pos.x].select_type)
-		print(self.points)
 		self.points += utils.get_piece_value(
 			board.matrixRef[pos.y][pos.x].select_type
 		)
-		print(self.points)
 	else:
 		aten_piece = false
 	
@@ -125,14 +122,27 @@ func move_piece(board: Board, pos: Vector2i):
 	
 	#============condiciones============
 	piece.is_first_move = false
-	if pos.y == board.SIZE.y-1:
-		piece.is_in_other_edge = true
+	
+	if piece.player_owner.ID_PLAYER == 1:
+		if pos.y == 0:
+			piece.can_coronate = true
+			if piece.select_type == 0:
+				coronate_menu_show(piece)
+		else:
+			piece.can_coronate = false
 	else:
-		piece.is_in_other_edge = false
+		if pos.y == board.SIZE.y-1:
+			piece.can_coronate = true
+			if piece.select_type == 0:
+				coronate_menu_show(piece)
+		else:
+			piece.can_coronate = false
+
 	
 	board_points_extra.set_point(
 		pos, Vector2i(2,3)
 	)
+	
 
 func enroque_move(board: Board, rook: Piece, old_pos:Vector2i, new_pos: Vector2i):
 	var id_piece = board.matrixPos[old_pos.y][old_pos.x]
@@ -155,6 +165,43 @@ func enroque_move(board: Board, rook: Piece, old_pos:Vector2i, new_pos: Vector2i
 	rook.actual_pos = new_pos
 	rook.is_first_move = false
 
+func coronate_menu_show(piece: Piece) -> void:
+	var popup: PopupControl = utils.obtener_nodos_por_tipo(get_parent(), PopupControl)[0]
+
+	var is_white = piece.player_owner.ID_PLAYER == 1
+	popup.whites.visible = is_white
+	popup.blacks.visible = not is_white
+
+	popup.coronate_select_type.connect(coronate_cap.bind(piece), CONNECT_ONE_SHOT)
+	popup.show_mouse(Vector2i(get_viewport().get_mouse_position()))
+	
+	#popup.coronate_select_type.connect(coronate_cap.bind(piece))
+
+func coronate_cap(type_piece:int, color: int, piece:Piece):
+	print(type_piece, color, self.player_name)
+	print(type_piece, color,  " PARA LA PIEZA: ", piece)
+	piece.select_type = type_piece
+	var sprite = utils.obtener_nodos_por_tipo(piece, Sprite2D)[0]
+	if color == 1: #white
+		if GlobalManager.style == 0: #CLASSIC
+			sprite.texture = load(
+				Constants.PIECES_PATH_CLASSIC_BLACK.get(piece.select_type, "")
+			)
+		if GlobalManager.style == 1: #AMBIENT
+			sprite.texture = load(
+				Constants.PIECES_PATH_AMBIENT_BLACK.get(piece.select_type, "")
+			)
+	else:
+		if GlobalManager.style == 0: #CLASSIC
+			sprite.texture = load(
+				Constants.PIECES_PATH_CLASSIC_WHITE.get(piece.select_type, "")
+			)
+		if GlobalManager.style == 1: #AMBIENT
+			sprite.texture = load(
+				Constants.PIECES_PATH_AMBIENT_WHITE.get(piece.select_type, "")
+			)
+		
+			
 var temp_other_player_reference : ChessPlayer = null
 func set_danger_points(other: ChessPlayer, board: Board, limits = true):
 	if temp_other_player_reference == null:
@@ -163,7 +210,6 @@ func set_danger_points(other: ChessPlayer, board: Board, limits = true):
 	other.danger_points = []
 	#limits = true, own_piece = true, only_attack = true
 	for piece in self.my_pieces:
-		#print(is_instance_of(self, ChessPlayer))
 		var r = piece.get_possible_moves(
 			self,
 			piece.actual_pos,
@@ -255,7 +301,7 @@ func valid_moves_jaque(board: Board, piece: Piece):
 	var result = []
 	if piece.select_type == 5: #king:
 		for mov in p:
-			print("[EN JAQUE]")
+			#print("[EN JAQUE]")
 			#piece.player_owner.debug_set_points_danger()
 			var r = utils.check_operation_vec_player(ID_PLAYER, piece.actual_pos, mov)
 			#Actualiza sin limites el dangerPoint 
@@ -289,11 +335,10 @@ func valid_jaquemate(board:Board):
 				no_king.append_array(self.valid_moves_jaque(board, p))
 				if self.in_jaque != self.states_game.JAQUE:
 					nomral.append_array(p.get_my_valid_moves(p.actual_pos, board, self))
-			
-			
 			var yes_king = self.valid_moves_jaque(board, self.my_king)
-			print(no_king)
-			print(yes_king)
+			print("No king",no_king)
+			print("yes king",yes_king)
+			print("normal", nomral)
 			if not (no_king + yes_king + nomral):
 				in_jaquemate = true
 	else: return

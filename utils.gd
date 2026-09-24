@@ -17,6 +17,8 @@ static func obtener_nodos_por_nombre(nodo_raiz: Node, name) -> Array:
 		resultado.append_array(obtener_nodos_por_nombre(hijo, name))
 	return resultado
 
+
+
 const PREFIJOS_NOTACION = {
 	Piece.Type.Pawn: "",
 	Piece.Type.Knightm: "C",

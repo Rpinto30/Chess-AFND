@@ -89,6 +89,18 @@ theme_override_constants/icon_max_width = 20
 theme_override_icons/icon = ExtResource("2_14vyj")
 text = "Ver Tabla"
 
+[node name="XLabel" type="Label" parent="Margin/Layout" unique_id=1786534916]
+layout_mode = 2
+text = "Cadena de Jugadas"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Margin/Layout" unique_id=307956131]
+layout_mode = 2
+scroll_horizontal_custom_step = 953.641
+vertical_scroll_mode = 0
+
+[node name="Jugadas" type="Label" parent="Margin/Layout/ScrollContainer" unique_id=1166533430]
+layout_mode = 2
+
 [node name="PlayersRow" type="HBoxContainer" parent="Margin/Layout" unique_id=710993920]
 layout_mode = 2
 theme_override_constants/separation = 12

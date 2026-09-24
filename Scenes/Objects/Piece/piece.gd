@@ -29,6 +29,8 @@ var actual_pos: Vector2i
 var is_first_move: bool = true
 var is_in_other_edge: bool = false
 
+var can_coronate: bool = false
+
 static func filt_jaque_pos(player: ChessPlayer, pos: Vector2i, piece):
 	if piece.select_type == 5: #king
 		if pos in player.danger_points: return false

@@ -4,6 +4,7 @@ extends ChessPlayer
 @export var board_parent: Node2D
 var board: Board
 var board_points: PointChess
+var layer_arrows: TileMapLayer
 var mainUI: PRINCIPALMENU
 
 var bot_dificulty: int ## 0 Fácil · 1 Medio · 2 Difícil | -1 NA
@@ -45,6 +46,7 @@ func load_data():
 	board = utils.obtener_nodos_por_tipo(self.chessBoard, Board)[0]
 	board_points = utils.obtener_nodos_por_tipo(self.chessBoard, PointChess)[0]
 	board_points_extra = utils.obtener_nodos_por_tipo(self.chessBoard, PointExtraChess)[0]
+	layer_arrows = utils.obtener_nodos_por_nombre(self.chessBoard, "flechas")[0]
 	mainUI = utils.obtener_nodos_por_tipo(self.get_parent(), PRINCIPALMENU)[0]
 	
 	afnd = AFND.new(mainUI, board, self)
@@ -212,13 +214,36 @@ func ejecutar_mejor_jugada() -> void:
 	selected_piece = info["pieza"].actual_pos
 	await get_tree().create_timer(rng_block.randf_range(0.5,4.3)).timeout
 	move_piece(board, info["destino"])
+	if info["pieza"].select_type == 0 and info["pieza"].can_coronate:
+		bot_coronate(info["pieza"])
 	actual_state = states.END
+
+
+func bot_coronate(piece:Piece):
+	"""var weights = {
+		Piece.Type.Queen: 0.5,
+		Piece.Type.Bishop: 0.1,
+		Piece.Type.Knightm: 0.2,
+		Piece.Type.Rook: 0.2
+	}"""
+	
+	var r = RandomNumberGenerator.new().randf_range(0.00, 1.00)
+	
+	if r < 0.2:
+		coronate_cap(Piece.Type.Rook, type_color_player, piece)
+	elif r >= 0.2 and r < 0.4:
+		coronate_cap(Piece.Type.Knightm, type_color_player, piece)
+	elif r >= 0.4 and r < 0.5:
+		coronate_cap(Piece.Type.Bishop, type_color_player, piece)
+	else:
+		coronate_cap(Piece.Type.Queen, type_color_player, piece)
+
 	
 
 func _simular_movimiento(pieza: Piece, destino: Vector2i) -> Dictionary:
 	var origen = pieza.actual_pos
 	var id_owner = board.matrixPos[origen.y][origen.x]
-
+	
 	var pieza_capturada = null
 	var capturada_en_my_pieces = false
 	var target = board.matrixRef[destino.y][destino.x]

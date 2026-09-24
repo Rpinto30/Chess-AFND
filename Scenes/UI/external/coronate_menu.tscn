@@ -1,0 +1,149 @@
+[gd_scene format=3 uid="uid://dwdfcl10qt4w"]
+
+[ext_resource type="Script" uid="uid://ccit2ao0gu6fg" path="res://Scenes/UI/external/coronate_menu.gd" id="1_k4i88"]
+[ext_resource type="Texture2D" uid="uid://dtyk4327y4fcy" path="res://Resources/Pieces/Normal/white/knight.png" id="2_26xr7"]
+[ext_resource type="Texture2D" uid="uid://j0xbghru454e" path="res://Resources/Pieces/Normal/white/rook.png" id="3_orqvk"]
+[ext_resource type="Texture2D" uid="uid://b0382kvalc6jt" path="res://Resources/Pieces/Normal/white/queen.png" id="4_prs38"]
+[ext_resource type="Texture2D" uid="uid://diyc4jb3idk48" path="res://Resources/Pieces/Normal/white/bishop.png" id="5_s4avg"]
+[ext_resource type="Texture2D" uid="uid://bnqi8sai37cr5" path="res://Resources/Pieces/Normal/black/knight.png" id="6_hpsfx"]
+[ext_resource type="Texture2D" uid="uid://c6eiu4pc2lrwa" path="res://Resources/Pieces/Normal/black/rook.png" id="7_a3nuc"]
+[ext_resource type="Texture2D" uid="uid://ceqwuu8fv8fun" path="res://Resources/Pieces/Normal/black/queen.png" id="8_87wx7"]
+[ext_resource type="Texture2D" uid="uid://dvus74spwpprs" path="res://Resources/Pieces/Normal/black/bishop.png" id="9_l65fm"]
+
+[node name="PopupPanel" type="PopupPanel" unique_id=1545219856 node_paths=PackedStringArray("whites", "blacks", "buttons_whites", "buttons_black")]
+oversampling_override = 1.0
+size = Vector2i(347, 106)
+visible = true
+script = ExtResource("1_k4i88")
+whites = NodePath("Panel/White")
+blacks = NodePath("Panel/Black")
+buttons_whites = [NodePath("Panel/White/Button"), NodePath("Panel/White/Button2"), NodePath("Panel/White/Button3"), NodePath("Panel/White/Button4")]
+buttons_black = [NodePath("Panel/Black/Button"), NodePath("Panel/Black/Button2"), NodePath("Panel/Black/Button3"), NodePath("Panel/Black/Button4")]
+
+[node name="Panel" type="Panel" parent="." unique_id=216785336]
+self_modulate = Color(4.6861615, 6.349519, 3.8096902, 1)
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 343.0
+offset_bottom = 102.0
+
+[node name="White" type="HBoxContainer" parent="Panel" unique_id=263061084]
+visible = false
+layout_mode = 0
+offset_top = 7.0
+offset_right = 332.0
+offset_bottom = 87.0
+
+[node name="Button" type="Button" parent="Panel/White" unique_id=908793825]
+texture_filter = 1
+custom_minimum_size = Vector2(100, 100)
+custom_maximum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/icon_pressed_color = Color(0.9741394, 1.4981654, 1.0933391, 1)
+theme_override_colors/icon_hover_color = Color(0.653721, 0.7805588, 0.6762089, 1)
+icon = ExtResource("2_26xr7")
+flat = true
+expand_icon = true
+
+[node name="Button2" type="Button" parent="Panel/White" unique_id=1928996937]
+texture_filter = 1
+custom_minimum_size = Vector2(100, 100)
+custom_maximum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/icon_pressed_color = Color(0.9741394, 1.4981654, 1.0933391, 1)
+theme_override_colors/icon_hover_color = Color(0.653721, 0.7805588, 0.6762089, 1)
+icon = ExtResource("5_s4avg")
+flat = true
+expand_icon = true
+
+[node name="Button3" type="Button" parent="Panel/White" unique_id=1937427436]
+texture_filter = 1
+custom_minimum_size = Vector2(100, 100)
+custom_maximum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/icon_pressed_color = Color(0.9741394, 1.4981654, 1.0933391, 1)
+theme_override_colors/icon_hover_color = Color(0.653721, 0.7805588, 0.6762089, 1)
+icon = ExtResource("3_orqvk")
+flat = true
+expand_icon = true
+
+[node name="Button4" type="Button" parent="Panel/White" unique_id=199289742]
+texture_filter = 1
+custom_minimum_size = Vector2(100, 100)
+custom_maximum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/icon_pressed_color = Color(0.9741394, 1.4981654, 1.0933391, 1)
+theme_override_colors/icon_hover_color = Color(0.653721, 0.7805588, 0.6762089, 1)
+icon = ExtResource("4_prs38")
+flat = true
+expand_icon = true
+
+[node name="Black" type="HBoxContainer" parent="Panel" unique_id=812370612]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -2.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button" type="Button" parent="Panel/Black" unique_id=191742483]
+texture_filter = 1
+custom_minimum_size = Vector2(100, 100)
+custom_maximum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/icon_pressed_color = Color(0.9741394, 1.4981654, 1.0933391, 1)
+theme_override_colors/icon_hover_color = Color(0.653721, 0.7805588, 0.6762089, 1)
+icon = ExtResource("6_hpsfx")
+flat = true
+expand_icon = true
+
+[node name="Button2" type="Button" parent="Panel/Black" unique_id=1763411738]
+texture_filter = 1
+custom_minimum_size = Vector2(100, 100)
+custom_maximum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/icon_pressed_color = Color(0.9741394, 1.4981654, 1.0933391, 1)
+theme_override_colors/icon_hover_color = Color(0.653721, 0.7805588, 0.6762089, 1)
+icon = ExtResource("9_l65fm")
+flat = true
+expand_icon = true
+
+[node name="Button3" type="Button" parent="Panel/Black" unique_id=436762621]
+texture_filter = 1
+custom_minimum_size = Vector2(100, 100)
+custom_maximum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/icon_pressed_color = Color(0.9741394, 1.4981654, 1.0933391, 1)
+theme_override_colors/icon_hover_color = Color(0.653721, 0.7805588, 0.6762089, 1)
+icon = ExtResource("7_a3nuc")
+flat = true
+expand_icon = true
+
+[node name="Button4" type="Button" parent="Panel/Black" unique_id=947100037]
+texture_filter = 1
+custom_minimum_size = Vector2(100, 100)
+custom_maximum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/icon_pressed_color = Color(0.9741394, 1.4981654, 1.0933391, 1)
+theme_override_colors/icon_hover_color = Color(0.653721, 0.7805588, 0.6762089, 1)
+icon = ExtResource("8_87wx7")
+flat = true
+expand_icon = true

@@ -72,6 +72,7 @@ static func mov_peon(board: Board, player: ChessPlayer, pos: Vector2i, is_first:
 		var r = Vector2i(0, 1)
 		#if Piece.filt_pos_limits(r, board) and board.matrixPos[r.y][r.x] == 0:
 		var pos1 = utils.check_operation_vec_player(player.ID_PLAYER, pos, r)
+		if pos1.y > board.SIZE.y-1: return []
 		if board.matrixPos[pos1.y][pos1.x] == 0:
 			validos.append(r)
 			var pos2 = utils.check_operation_vec_player(player.ID_PLAYER, pos, Vector2i(0,2))
